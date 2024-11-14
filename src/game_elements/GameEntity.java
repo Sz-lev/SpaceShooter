@@ -1,16 +1,27 @@
 package game_elements;
 
-abstract class GameElement {
+abstract class GameEntity {
     protected int maxCoordinateOfX;
     protected int maxCoordinateOfY;
     protected int xCoordinate;
     protected int yCoordinate;
     protected int speed;
-    protected int size;
+    protected int size_x;
+    protected int size_y;
     
-    public GameElement() {}
+    public GameEntity() {
+        xCoordinate = 0;
+        yCoordinate = 0;
+        speed = 0;
+    }
+
+    public GameEntity(int speed) {
+        xCoordinate = 0;
+        yCoordinate = 0;
+        this.speed = speed;
+    }
     
-    public GameElement(int x, int y, int speed) {
+    public GameEntity(int x, int y, int speed) {
         maxCoordinateOfX = x;
         maxCoordinateOfY = y;
         this.speed = speed;
@@ -34,13 +45,6 @@ abstract class GameElement {
         return yCoordinate;
     }
 
-    public void update() {
-        if(xCoordinate > speed && xCoordinate < maxCoordinateOfX-speed)
-            xCoordinate += speed;
-        if(yCoordinate > speed && yCoordinate < maxCoordinateOfY)
-            yCoordinate += speed;
-    }
-    abstract String getName();
-
+    public void update() {}
 }
 

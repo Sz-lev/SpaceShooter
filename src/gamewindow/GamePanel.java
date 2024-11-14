@@ -3,8 +3,14 @@ package gamewindow;
 import gamelogic.GameLogic;
 import gamelogic.GameThread;
 
+import javax.imageio.ImageIO;
+import javax.imageio.stream.ImageInputStream;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 
 public class GamePanel extends JPanel{
     private final int WIDTH = 1080;
@@ -13,13 +19,18 @@ public class GamePanel extends JPanel{
     private Thread gameThread;
     private GameKeyListener gameKL = new GameKeyListener();
     private GameLogic gamelogic;
+    private BufferedImage background1, background2;
+
+    /*
+     * A GamePanel konstruktora
+     */
     public GamePanel() {
         setSize(WIDTH, HEIGTH);
-        setBackground(Color.BLACK);
+//        setBackground(Color.BLACK);
         setDoubleBuffered(true);
         setFocusable(true);
-        requestFocusInWindow();
         addKeyListener(gameKL);
+
 
         play();
 
@@ -31,38 +42,30 @@ public class GamePanel extends JPanel{
     }
 
     public void update() {
-        if(gameKL.up && !gameKL.down) {
-            gamelogic.player.moveY(false);
-            System.out.println("UP");
-        } else if(gameKL.down && !gameKL.up) {
-            gamelogic.player.moveY(true);
-            System.out.println("DOWN");
-        }
-        if(gameKL.left && !gameKL.right) {
-            gamelogic.player.moveX(false);
-            System.out.println("LEFT");
-        } else if(gameKL.right && !gameKL.left) {
-            gamelogic.player.moveX(true);
-            System.out.println("RIGHT");
-        }
+
     }
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
+
         Graphics2D graphics = (Graphics2D) g;
 
-        if(gamelogic != null) {
-            graphics.setColor(Color.WHITE);
-            graphics.fillRect(gamelogic.player.getxCoordinate(), gamelogic.player.getyCoordinate(), 50, 50);
-            graphics.dispose();
-        }
+        gamelogic.draw(graphics);
 
+        graphics.dispose();
 
     }
 
-    public void setGamelogic(GameLogic gl) {
-        gamelogic = gl;
-        gamelogic.setScreenDimensions(WIDTH, HEIGTH);
-        gamelogic.init();
+    public Dimension getScreenDimension() {
+        return new Dimension(this.WIDTH,this.HEIGTH);
     }
+
+    public GameKeyListener getGameKeyListener() {
+        return gameKL;
+    }
+
+    public void setGameLogic(GameLogic gamelogic) {
+        this.gamelogic = gamelogic;
+    }
+
 
 }

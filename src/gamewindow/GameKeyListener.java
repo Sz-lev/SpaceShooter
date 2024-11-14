@@ -5,7 +5,7 @@ import java.awt.event.KeyListener;
 
 public class GameKeyListener implements KeyListener {
 
-    public boolean up, left, down, right;
+    public boolean up, left, down, right, space;
 
     @Override
     public void keyTyped(KeyEvent e) {}
@@ -30,6 +30,9 @@ public class GameKeyListener implements KeyListener {
                 right = true;
                 break;
             }
+            case KeyEvent.VK_SPACE: {
+                space = true;
+            }
         }
     }
 
@@ -53,6 +56,9 @@ public class GameKeyListener implements KeyListener {
             case KeyEvent.VK_RIGHT: {
                 right = false;
                 break;
+            }
+            case KeyEvent.VK_SPACE: {
+                space = false;
             }
         }
     }

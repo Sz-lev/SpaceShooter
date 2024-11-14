@@ -7,9 +7,9 @@ public class GameThread extends Thread{
     private final int FPS = 60;
 
     public GameThread(GamePanel gp) {
-        gamelogic = new GameLogic();
+        gamelogic = new GameLogic(gp);
         gamepanel = gp;
-        gamepanel.setGamelogic(gamelogic);
+        gamepanel.setGameLogic(gamelogic);
     }
     @Override
     public void run() {
@@ -33,6 +33,4 @@ public class GameThread extends Thread{
         }
 
     }
-
-
 }
