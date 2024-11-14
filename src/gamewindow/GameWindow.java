@@ -18,7 +18,6 @@ public class GameWindow {
     public void initWindow() {
         window = new JFrame();
         window.setTitle("SpaceShooter");
-        window.setSize(WIDTH, HEIGTH);
         window.setResizable(false);
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         window.setLocationRelativeTo(null);
@@ -29,8 +28,8 @@ public class GameWindow {
         jb.addActionListener(new PlayActionListener());
         menu.add(jb);
         window.add(menu, BorderLayout.NORTH);
-        GamePanel gamepanel = new GamePanel();
-        window.add(gamepanel, BorderLayout.CENTER);
+        menu.setSize(100, 100);
+        window.pack();
         window.setVisible(true);
     }
     class PlayActionListener implements ActionListener {
@@ -40,6 +39,8 @@ public class GameWindow {
             window.remove(menu);
             GamePanel gamepanel = new GamePanel();
             window.add(gamepanel);
+            window.pack();
+            window.setVisible(true);
         }
     }
 }
