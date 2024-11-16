@@ -3,6 +3,8 @@ out/
 !**/src/main/**/out/
 !**/src/test/**/out/
 .idea
+SpaceShooter.iml
+SpaceShooter_HF.iml
 
 ### Eclipse ###
 .apt_generated
