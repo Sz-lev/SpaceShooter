@@ -64,7 +64,6 @@ public class EnemySpaceShip extends SpaceShip{
 
     private void enemyRandomizer() {
         int enemyImageNum = (int) (4*Math.random());
-        System.out.println(enemyImageNum);
         switch (enemyImageNum) {
             case 0: {
                 image = ship1;
@@ -160,6 +159,5 @@ public class EnemySpaceShip extends SpaceShip{
 
         return lowX > highX && lowY > highY;
     }
-
 
 }
