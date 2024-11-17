@@ -15,10 +15,12 @@ public class GameLogic {
     public PlayerSpaceShip player;
     private List<EnemySpaceShip> enemyList;
     private List<Laser> laserList;
+    private List<Meteor> meteorList;
     private GamePanel gp;
     private int time;
     private int fpsCounter;
     private int points;
+    private int nextMeteorInterval;
 
     public GameLogic(GamePanel gamepanel) {
         gp = gamepanel;
@@ -30,22 +32,37 @@ public class GameLogic {
         time = 0;
         fpsCounter = 0;
         points = 0;
+        nextMeteorInterval = 3;
         backGround = new BackGround();
         laserList = new ArrayList<>();
         player = new PlayerSpaceShip(gp, laserList);
         enemyList = new ArrayList<>();
+        meteorList = new ArrayList<>();
+        enemyList.add(new EnemySpaceShip(gp.getScreenDimension(), enemyList, laserList));
+        enemyList.add(new EnemySpaceShip(gp.getScreenDimension(), enemyList, laserList));
+        enemyList.add(new EnemySpaceShip(gp.getScreenDimension(), enemyList, laserList));
+        enemyList.add(new EnemySpaceShip(gp.getScreenDimension(), enemyList, laserList));
+
 
     }
-    public void gameRun() {
+    public void gameUpdate() {
         fpsCounter++;
         if(fpsCounter % 60 == 0) {
             fpsCounter = 0;
             time++;
-            System.out.println(time);
+            System.out.println(laserList.size());
+            if(time % nextMeteorInterval == 0)
+                meteorInvoke();
         }
         backGround.update();
         player.update();
+
+        for(EnemySpaceShip enemy : enemyList){
+            enemy.update();
+        }
         updateLasers();
+        updateMeteors();
+
 
     }
 
@@ -56,10 +73,13 @@ public class GameLogic {
     public void draw(Graphics2D g) {
         backGround.draw(g);
         drawLasers(g);
+        drawMeteors(g);
         player.draw(g);
+        for(EnemySpaceShip enemy : enemyList) {
+            enemy.draw(g);
+        }
     }
     private void updateLasers() {
-        System.out.println(laserList.size());
         Iterator<Laser> laserIterator = laserList.iterator();
         while(laserIterator.hasNext()) {
             Laser laser = laserIterator.next();
@@ -73,6 +93,28 @@ public class GameLogic {
     private void drawLasers(Graphics2D g) {
         for(Laser laser : laserList) {
             laser.draw(g);
+        }
+    }
+
+    private void meteorInvoke() {
+        Meteor newMeteor = new Meteor(gp.getScreenDimension());
+        meteorList.add(newMeteor);
+    }
+
+    private void updateMeteors() {
+        Iterator<Meteor> meteorIterator = meteorList.iterator();
+        while(meteorIterator.hasNext()) {
+            Meteor meteor = meteorIterator.next();
+            meteor.update();
+            if(meteor.isOutOfBounds()) {
+                meteorIterator.remove();
+            }
+        }
+    }
+
+    private void drawMeteors(Graphics2D g) {
+        for(Meteor meteor : meteorList) {
+            meteor.draw(g);
         }
     }
 }

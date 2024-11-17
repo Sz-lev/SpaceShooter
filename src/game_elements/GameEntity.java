@@ -1,5 +1,7 @@
 package game_elements;
 
+import java.awt.*;
+
 abstract class GameEntity {
     protected int maxCoordinateOfX;
     protected int maxCoordinateOfY;
@@ -45,6 +47,7 @@ abstract class GameEntity {
         return yCoordinate;
     }
 
-    public void update() {}
+    abstract void update();
+    abstract void draw(Graphics2D g);
 }
 

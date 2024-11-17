@@ -15,9 +15,8 @@ public class PlayerSpaceShip extends SpaceShip{
 
     private GamePanel gp;
     private BufferedImage image;
-    private List<Laser> laserList;
-    private double laserRechargeTime;
-    private double lastLaserShoot;
+    private final List<Laser> laserList;
+
     public PlayerSpaceShip(GamePanel gamepanel, List<Laser> laserList) {
         gp = gamepanel;
         this.laserList = laserList;
@@ -103,7 +102,7 @@ public class PlayerSpaceShip extends SpaceShip{
         lastLaserShoot = System.currentTimeMillis();
     }
 
-    private boolean isRecharging() {
+    public boolean isRecharging() {
         return (System.currentTimeMillis() - lastLaserShoot) / 1000 < laserRechargeTime;
     }
 

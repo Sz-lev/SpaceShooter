@@ -18,7 +18,7 @@ public class GameThread extends Thread{
 
         while(!gamelogic.end()) {
             double currentTime = System.nanoTime();
-            gamelogic.gameRun();
+            gamelogic.gameUpdate();
             gamepanel.update();
             gamepanel.repaint();
             double timeSpent = System.nanoTime()-currentTime;

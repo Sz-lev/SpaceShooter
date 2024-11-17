@@ -11,41 +11,47 @@ import java.io.InputStreamReader;
 public class Laser extends GameEntity{
 
     private SpaceShip spaceShip;
-    private BufferedImage image;
     public boolean isOutOfBounds;
+    private static BufferedImage image;
+
+    static {
+        File file = new File("./resource/SpaceShooterRedux/PNG/Lasers/laserRed01.png");
+        try {
+            ImageInputStream imageInputStream = ImageIO.createImageInputStream(file);
+            image = ImageIO.read(imageInputStream);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
     public Laser(SpaceShip spaceShip, int speed) {
         this.spaceShip = spaceShip;
         this.speed = speed;
         laserInit();
+
     }
 
     public void laserInit() {
-        getLaserImage();
+        size_y = image.getHeight();
+        size_x = image.getWidth();
         xCoordinate = spaceShip.xCoordinate+ (spaceShip.size_x-size_x)/2;
         yCoordinate = spaceShip.yCoordinate;
         isOutOfBounds = false;
     }
 
+    @Override
     public void update() {
         if(!isOutOfBounds) {
             yCoordinate += speed;
             checkPosition();
         }
     }
+
+    @Override
     public void draw(Graphics2D g) {
         g.drawImage(image, xCoordinate, yCoordinate, null);
-    }
-
-    private void getLaserImage() {
-        File file = new File("./resource/SpaceShooterRedux/PNG/Lasers/laserRed01.png");
-        try {
-            ImageInputStream imageInputStream = ImageIO.createImageInputStream(file);
-            image = ImageIO.read(imageInputStream);
-            size_y = image.getHeight();
-            size_x = image.getWidth();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
     private void checkPosition() {

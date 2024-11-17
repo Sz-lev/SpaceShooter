@@ -1,7 +1,10 @@
 package game_elements;
 
-public class SpaceShip extends GameEntity {
+abstract class SpaceShip extends GameEntity {
 
+
+    protected double laserRechargeTime;
+    protected double lastLaserShoot;
     public SpaceShip() {}
 
     public SpaceShip(int speed) {
@@ -10,5 +13,8 @@ public class SpaceShip extends GameEntity {
     public SpaceShip(int x, int y, int speed) {
         super(x, y, speed);
     }
+
+    abstract boolean isRecharging();
+
 
 }
