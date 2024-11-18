@@ -19,14 +19,17 @@ public class GamePanel extends JPanel{
     private GameKeyListener gameKL = new GameKeyListener();
     private GameLogic gamelogic;
 
+    private GameWindow gameWindow;
+
     /*
      * A GamePanel konstruktora
      */
-    public GamePanel() {
+    public GamePanel(GameWindow gameWindow) {
         setSize(WIDTH, HEIGTH);
         setDoubleBuffered(true);
         setFocusable(true);
         addKeyListener(gameKL);
+        this.gameWindow = gameWindow;
         play();
     }
 
@@ -35,7 +38,9 @@ public class GamePanel extends JPanel{
         gameThread.start();
     }
 
-    public void update() {}
+    public void update() {
+        gameWindow.addMenu();
+    }
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
 

@@ -14,10 +14,7 @@ import java.util.List;
 
 public class Meteor extends GameEntity {
 
-    private int meteorSize;
-    private boolean outOfBounds;
-    private List<Explosion> explosionList;
-    private BufferedImage image;
+
     private static BufferedImage meteorSmall, meteorMedium, meteorBig;
     static {
         File small = new File("./resource/SpaceShooterRedux/PNG/Meteors/meteorBrown_small1.png");
@@ -32,6 +29,13 @@ public class Meteor extends GameEntity {
         }
     }
 
+    private int meteorSize;
+    private boolean outOfBounds;
+    private List<Explosion> explosionList;
+    private BufferedImage image;
+    private int endPosX;
+    private double doublePosX, doublePosY, speedX, speedY;
+
     public Meteor(Dimension coords, List<Explosion> explosionList) {
         maxCoordinateOfX = coords.width;
         maxCoordinateOfY = coords.height;
@@ -43,12 +47,17 @@ public class Meteor extends GameEntity {
         meteorRandomizer();
         yCoordinate = -size_y;
         outOfBounds = false;
+        calculateRoute();
     }
 
 
 
     public void update() {
-        yCoordinate += speed;
+        doublePosX += speedX;
+        xCoordinate = (int) doublePosX;
+        doublePosY += speedY;
+        yCoordinate = (int) doublePosY;
+
         if(yCoordinate > maxCoordinateOfY)
             outOfBounds = true;
     }
@@ -76,8 +85,25 @@ public class Meteor extends GameEntity {
         }
         size_x = image.getWidth();
         size_y = image.getHeight();
-        xCoordinate = (int) ((maxCoordinateOfX - size_x)*Math.random());
+
+        doublePosX =  (maxCoordinateOfX - size_x)*Math.random();
+        xCoordinate = (int) doublePosX;
         speed = (int) (4 + 6*Math.random());
+        endPosX =(int) ((maxCoordinateOfX - size_x)*Math.random());
+        doublePosY = -size_y;
+    }
+
+    private void calculateRoute() {
+        double distanceX = endPosX - xCoordinate;
+        double distanceY = maxCoordinateOfY - yCoordinate;
+
+        double angleOfRoute = Math.atan((distanceY/distanceX));
+        speedX = Math.cos(angleOfRoute)*speed;
+        if(endPosX < xCoordinate)
+            speedX *= -1;
+
+        speedY = Math.sin(angleOfRoute)*speed;
+        speedY =Math.abs(speedY);
     }
 
     public boolean isOutOfBounds() {

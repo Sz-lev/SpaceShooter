@@ -13,6 +13,8 @@ public class GameWindow {
     private JPanel menu;
     private GamePanel gamePanel;
 
+    private int gameState;
+
     public  GameWindow() {
         initWindow();
     }
@@ -26,6 +28,16 @@ public class GameWindow {
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         window.setLocationRelativeTo(null);
         window.setFocusable(true);
+        addMenu();
+    }
+
+
+    public void addMenu() {
+        if(gamePanel != null) {
+            window.remove(gamePanel);
+            gamePanel = null;
+        }
+
         menu = new JPanel();
         JButton jb = new JButton("Play");
         jb.addActionListener(new PlayActionListener());
@@ -35,19 +47,30 @@ public class GameWindow {
         window.getContentPane().setPreferredSize(new Dimension(400, 500));
         window.pack();
         window.setVisible(true);
+
     }
+
+    public void addGamePanel() {
+        if(menu != null) {
+            window.remove(menu);
+            menu = null;
+        }
+
+        GamePanel gamepanel = new GamePanel(this);
+        window.add(gamepanel);
+        window.getContentPane().setPreferredSize(new Dimension(WIDTH, HEIGTH));
+        window.pack();
+        window.setVisible(true);
+        gamepanel.requestFocusInWindow();
+        menu = null;
+    }
+
 
     class PlayActionListener implements ActionListener {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            window.remove(menu);
-            GamePanel gamepanel = new GamePanel();
-            window.add(gamepanel);
-            window.getContentPane().setPreferredSize(new Dimension(WIDTH, HEIGTH));
-            window.pack();
-            window.setVisible(true);
-            gamepanel.requestFocusInWindow();
+            addGamePanel();
         }
     }
 

@@ -132,14 +132,13 @@ public class EnemySpaceShip extends SpaceShip{
 
         double routeAngle = Math.atan(distanceY/distanceX);
 
-
         speedX = Math.cos(routeAngle)*speed;
         if(nextX < xDoublecoord)
             speedX *= -1;
+
         speedY = Math.sin(routeAngle)*speed;
         if(nextY < yDoubleCoord)
             speedY *= -1;
-
     }
 
     private void shootLaser() {
