@@ -6,6 +6,7 @@ import gamewindow.GamePanel;
 import javax.imageio.ImageIO;
 import javax.imageio.stream.ImageInputStream;
 import java.awt.*;
+import java.awt.geom.Ellipse2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -16,10 +17,15 @@ public class PlayerSpaceShip extends SpaceShip{
     private GamePanel gp;
     private BufferedImage image;
     private final List<Laser> laserList;
+    private final List<Explosion> explosionList;
+    private int health;
+    private double lastHitTime;
+    private final double invincibleTime = 2.0;
 
-    public PlayerSpaceShip(GamePanel gamepanel, List<Laser> laserList) {
+    public PlayerSpaceShip(GamePanel gamepanel, List<Laser> laserList, List<Explosion> explosionList) {
         gp = gamepanel;
         this.laserList = laserList;
+        this.explosionList = explosionList;
         playerInit();
     }
 
@@ -31,6 +37,8 @@ public class PlayerSpaceShip extends SpaceShip{
         xCoordinate = (maxCoordinateOfX-size_x)/2;
         yCoordinate = (maxCoordinateOfY - size_y)/2;
         speed = 8;
+        health = 3;
+        laserSpeed = -15;
         laserRechargeTime = 0.5;
         getPlayerImage();
     }
@@ -78,7 +86,6 @@ public class PlayerSpaceShip extends SpaceShip{
     }
 
     public void draw(Graphics2D g) {
-
         g.drawImage(image, xCoordinate, yCoordinate, size_x, size_y, null);
     }
 
@@ -96,14 +103,29 @@ public class PlayerSpaceShip extends SpaceShip{
     }
 
     private void shootLaser() {
-        Laser laser = new Laser(this, -15);
+        Laser laser = new Laser(this, laserSpeed, explosionList);
         laser.setBounds(new Dimension(maxCoordinateOfX, maxCoordinateOfY));
         laserList.add(laser);
         lastLaserShoot = System.currentTimeMillis();
+
     }
 
     public boolean isRecharging() {
         return (System.currentTimeMillis() - lastLaserShoot) / 1000 < laserRechargeTime;
     }
+
+    public void damage() {
+        double currentTime = System.currentTimeMillis()/1000.0;
+        if(currentTime - lastHitTime > invincibleTime) {
+            health--;
+            lastHitTime = currentTime;
+        }
+    }
+
+    public boolean isAlive() {
+        return health > 0;
+    }
+
+
 
 }

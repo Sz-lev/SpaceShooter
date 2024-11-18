@@ -32,19 +32,20 @@ public class EnemySpaceShip extends SpaceShip{
     private BufferedImage image;
     private int nextX, nextY;
     double speedX, speedY;
-    private List<EnemySpaceShip> enemyList;
     private List<Laser> laserList;
+    private List<Explosion> explosionList;
     private double xDoublecoord, yDoubleCoord;
+    private boolean exploded;
 
     public EnemySpaceShip(int x, int y, int speed) {
         super(x, y, speed);
     }
 
-    public EnemySpaceShip(Dimension coords, List<EnemySpaceShip> enemyList, List<Laser> laserList) {
+    public EnemySpaceShip(Dimension coords, List<Laser> laserList, List<Explosion> explosionList) {
         maxCoordinateOfX = coords.width;
         maxCoordinateOfY = coords.height;
-        this.enemyList = enemyList;
         this.laserList = laserList;
+        this.explosionList = explosionList;
         enemyInit();
 
     }
@@ -53,9 +54,11 @@ public class EnemySpaceShip extends SpaceShip{
         enemyRandomizer();
         size_x = image.getWidth();
         size_y = image.getHeight();
-        health = 4;
+        health = 3;
+        exploded = false;
         speed = 2;
         laserRechargeTime = 2;
+        laserSpeed = 15;
         xDoublecoord = (int) ((maxCoordinateOfX-size_x)*Math.random());
         yDoubleCoord = -size_y;
         nextCoordRandomizer();
@@ -91,14 +94,15 @@ public class EnemySpaceShip extends SpaceShip{
 
         xDoublecoord += speedX;
         yDoubleCoord += speedY;
+        xCoordinate = (int) xDoublecoord;
+        yCoordinate = (int) yDoubleCoord;
         if(calculateArrival()) {
             nextCoordRandomizer();
             calculateRoute();
-            if(!isRecharging())
+            if(!isRecharging()) {
                 shootLaser();
+            }
         }
-
-
     }
 
 
@@ -130,7 +134,7 @@ public class EnemySpaceShip extends SpaceShip{
     private void shootLaser() {
         xCoordinate = (int) xDoublecoord;
         yCoordinate = (int) yDoubleCoord;
-        Laser laser = new Laser(this, 15);
+        Laser laser = new Laser(this, laserSpeed, explosionList);
         laser.setBounds(new Dimension(maxCoordinateOfX, maxCoordinateOfY));
         laserList.add(laser);
         lastLaserShoot = System.currentTimeMillis();
@@ -158,6 +162,24 @@ public class EnemySpaceShip extends SpaceShip{
         }
 
         return lowX > highX && lowY > highY;
+    }
+
+    private void explode() {
+        int explosionPosX = xCoordinate+size_x/2;
+        int explosionPosY = yCoordinate+size_y/2;
+        BigExplosion bigExplosion = new BigExplosion(new Dimension(explosionPosX, explosionPosY));
+        explosionList.add(bigExplosion);
+        exploded = true;
+    }
+
+    public boolean isExploded() {
+        return exploded;
+    }
+
+    public void damageShip() {
+        health--;
+        if(health == 0)
+            explode();
     }
 
 }

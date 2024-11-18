@@ -47,6 +47,5 @@ public class BackGround {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
     }
 }

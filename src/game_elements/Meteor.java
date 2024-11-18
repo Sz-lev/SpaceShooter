@@ -2,14 +2,17 @@ package game_elements;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
+import java.awt.geom.Ellipse2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
 public class Meteor extends GameEntity {
 
     private int meteorSize;
     private boolean outOfBounds;
+    private List<Explosion> explosionList;
     private BufferedImage image;
     private static BufferedImage meteorSmall, meteorMedium, meteorBig;
     static {
@@ -25,9 +28,10 @@ public class Meteor extends GameEntity {
         }
     }
 
-    public Meteor(Dimension coords) {
+    public Meteor(Dimension coords, List<Explosion> explosionList) {
         maxCoordinateOfX = coords.width;
         maxCoordinateOfY = coords.height;
+        this.explosionList = explosionList;
         meteorInit();
     }
 
@@ -76,4 +80,14 @@ public class Meteor extends GameEntity {
         return outOfBounds;
     }
 
+    public Ellipse2D.Double getMeteorBounds() {
+        return new Ellipse2D.Double(xCoordinate, yCoordinate, size_x, size_y);
+    }
+
+    public void explode() {
+        int explosionPosX = xCoordinate+size_x/2;
+        int explosionPosY = yCoordinate+size_y/2;
+        explosionList.add(new BigExplosion(new Dimension(explosionPosX, explosionPosY)));
+        outOfBounds = true;
+    }
 }
