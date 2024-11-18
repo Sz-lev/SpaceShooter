@@ -11,10 +11,12 @@ public class GameWindow {
     private final int HEIGTH = 720;
     private JFrame window;
     private JPanel menu;
+    private GamePanel gamePanel;
 
     public  GameWindow() {
         initWindow();
     }
+
     public void initWindow() {
         window = new JFrame();
         window.setTitle("SpaceShooter");
@@ -24,8 +26,6 @@ public class GameWindow {
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         window.setLocationRelativeTo(null);
         window.setFocusable(true);
-
-
         menu = new JPanel();
         JButton jb = new JButton("Play");
         jb.addActionListener(new PlayActionListener());
@@ -34,9 +34,9 @@ public class GameWindow {
         menu.setSize(400, 500);
         window.getContentPane().setPreferredSize(new Dimension(400, 500));
         window.pack();
-
         window.setVisible(true);
     }
+
     class PlayActionListener implements ActionListener {
 
         @Override

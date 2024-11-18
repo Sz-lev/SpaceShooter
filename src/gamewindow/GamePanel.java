@@ -26,18 +26,19 @@ public class GamePanel extends JPanel{
      */
     public GamePanel() {
         setSize(WIDTH, HEIGTH);
-//        setBackground(Color.BLACK);
         setDoubleBuffered(true);
         setFocusable(true);
         addKeyListener(gameKL);
-
-
         play();
-
     }
 
     private void play() {
         gameThread = new GameThread(this);
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
         gameThread.start();
     }
 
@@ -64,6 +65,5 @@ public class GamePanel extends JPanel{
     public void setGameLogic(GameLogic gamelogic) {
         this.gamelogic = gamelogic;
     }
-
 
 }

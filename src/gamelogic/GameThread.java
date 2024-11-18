@@ -17,12 +17,12 @@ public class GameThread extends Thread{
         double drawTime = 1000000000.0/FPS;
 
         while(!gamelogic.end()) {
-            double currentTime = System.nanoTime();
+            double updateBeginTime = System.nanoTime();
             gamelogic.gameUpdate();
             gamepanel.update();
             gamepanel.repaint();
-            double timeSpent = System.nanoTime()-currentTime;
-            int nextDrawTime = (int) (drawTime-timeSpent)/1000000;
+            double timeSpent = System.nanoTime()-updateBeginTime;
+            long nextDrawTime = (long) (drawTime-timeSpent)/1000000;
             if(nextDrawTime > 0) {
                 try {
                     sleep(nextDrawTime);

@@ -36,6 +36,7 @@ public class EnemySpaceShip extends SpaceShip{
     private List<Explosion> explosionList;
     private double xDoublecoord, yDoubleCoord;
     private boolean exploded;
+    private HealthBar healthBar;
 
     public EnemySpaceShip(int x, int y, int speed) {
         super(x, y, speed);
@@ -57,10 +58,11 @@ public class EnemySpaceShip extends SpaceShip{
         health = 3;
         exploded = false;
         speed = 2;
-        laserRechargeTime = 2;
+        laserRechargeTime = 1;
         laserSpeed = 15;
         xDoublecoord = (int) ((maxCoordinateOfX-size_x)*Math.random());
         yDoubleCoord = -size_y;
+        healthBar = new HealthBar();
         nextCoordRandomizer();
         calculateRoute();
     }
@@ -96,6 +98,8 @@ public class EnemySpaceShip extends SpaceShip{
         yDoubleCoord += speedY;
         xCoordinate = (int) xDoublecoord;
         yCoordinate = (int) yDoubleCoord;
+        healthBar.update(new Dimension(xCoordinate+size_x/2, yCoordinate));
+
         if(calculateArrival()) {
             nextCoordRandomizer();
             calculateRoute();
@@ -108,6 +112,7 @@ public class EnemySpaceShip extends SpaceShip{
 
     public void draw(Graphics2D g) {
         g.drawImage(image, (int) xDoublecoord, (int) yDoubleCoord, null);
+        healthBar.draw(g);
     }
 
     private void nextCoordRandomizer() {
@@ -137,11 +142,12 @@ public class EnemySpaceShip extends SpaceShip{
         Laser laser = new Laser(this, laserSpeed, explosionList);
         laser.setBounds(new Dimension(maxCoordinateOfX, maxCoordinateOfY));
         laserList.add(laser);
-        lastLaserShoot = System.currentTimeMillis();
+        lastLaserShoot = System.currentTimeMillis()/1000.0;
     }
 
     public boolean isRecharging() {
-        return System.currentTimeMillis() - lastLaserShoot < laserRechargeTime;
+        double currentTime = System.currentTimeMillis()/1000.0;
+        return currentTime - lastLaserShoot < laserRechargeTime;
     }
 
     public boolean calculateArrival() {
@@ -178,6 +184,7 @@ public class EnemySpaceShip extends SpaceShip{
 
     public void damageShip() {
         health--;
+        healthBar.damage();
         if(health == 0)
             explode();
     }
