@@ -1,4 +1,4 @@
-package game_elements;
+package game_elements.entities.spaceships;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -39,11 +39,13 @@ public class HealthBar {
     private int healthLostCounter;
     private final int imageScale = 3;
 
-    public HealthBar() {
+    public HealthBar(Dimension coords) {
         healthLostCounter = 0;
         image = imageList.get(healthLostCounter);
         sizeX = image.getWidth()/imageScale;
         sizeY = image.getHeight()/imageScale;
+        posX = coords.width;
+        posY = coords.height;
     }
 
     public void update(Dimension coords) {

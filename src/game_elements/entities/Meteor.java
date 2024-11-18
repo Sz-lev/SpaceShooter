@@ -1,4 +1,8 @@
-package game_elements;
+package game_elements.entities;
+
+import game_elements.entities.GameEntity;
+import game_elements.explosions.BigExplosion;
+import game_elements.explosions.Explosion;
 
 import javax.imageio.ImageIO;
 import java.awt.*;

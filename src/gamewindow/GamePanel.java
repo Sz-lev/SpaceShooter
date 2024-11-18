@@ -15,11 +15,9 @@ import java.io.IOException;
 public class GamePanel extends JPanel{
     private final int WIDTH = 1080;
     private final int HEIGTH = 720;
-
     private Thread gameThread;
     private GameKeyListener gameKL = new GameKeyListener();
     private GameLogic gamelogic;
-    private BufferedImage background1, background2;
 
     /*
      * A GamePanel konstruktora
@@ -34,11 +32,6 @@ public class GamePanel extends JPanel{
 
     private void play() {
         gameThread = new GameThread(this);
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
         gameThread.start();
     }
 

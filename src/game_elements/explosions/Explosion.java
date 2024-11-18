@@ -1,4 +1,4 @@
-package game_elements;
+package game_elements.explosions;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;

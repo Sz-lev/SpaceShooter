@@ -1,4 +1,7 @@
-package game_elements;
+package game_elements.entities.spaceships;
+
+import game_elements.explosions.BigExplosion;
+import game_elements.explosions.Explosion;
 
 import java.util.List;
 import javax.imageio.ImageIO;
@@ -60,11 +63,14 @@ public class EnemySpaceShip extends SpaceShip{
         speed = 2;
         laserRechargeTime = 1;
         laserSpeed = 15;
-        xDoublecoord = (int) ((maxCoordinateOfX-size_x)*Math.random());
-        yDoubleCoord = -size_y;
-        healthBar = new HealthBar();
+        xCoordinate = (int) ((maxCoordinateOfX-size_x)*Math.random());
+        xDoublecoord = xCoordinate;
+        yCoordinate = -size_y;
+        yDoubleCoord = yCoordinate;
+        healthBar = new HealthBar(new Dimension(xCoordinate, yCoordinate));
         nextCoordRandomizer();
         calculateRoute();
+
     }
 
     private void enemyRandomizer() {
@@ -139,8 +145,7 @@ public class EnemySpaceShip extends SpaceShip{
     private void shootLaser() {
         xCoordinate = (int) xDoublecoord;
         yCoordinate = (int) yDoubleCoord;
-        Laser laser = new Laser(this, laserSpeed, explosionList);
-        laser.setBounds(new Dimension(maxCoordinateOfX, maxCoordinateOfY));
+        Laser laser = new Laser(this, laserSpeed, explosionList, 0);
         laserList.add(laser);
         lastLaserShoot = System.currentTimeMillis()/1000.0;
     }

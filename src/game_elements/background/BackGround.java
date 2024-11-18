@@ -1,4 +1,4 @@
-package game_elements;
+package game_elements.background;
 
 import gamewindow.GamePanel;
 

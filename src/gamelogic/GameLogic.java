@@ -6,7 +6,13 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import game_elements.*;
+import game_elements.background.BackGround;
+import game_elements.entities.Meteor;
+import game_elements.entities.PowerUp;
+import game_elements.entities.spaceships.EnemySpaceShip;
+import game_elements.entities.spaceships.Laser;
+import game_elements.entities.spaceships.PlayerSpaceShip;
+import game_elements.explosions.Explosion;
 import gamewindow.GamePanel;
 
 public class GameLogic {
@@ -17,12 +23,20 @@ public class GameLogic {
     private List<Laser> laserList;
     private List<Meteor> meteorList;
     private List<Explosion> explosionList;
+    private List<PowerUp> powerUpList;
     private GamePanel gp;
     private int time;
     private int fpsCounter;
     private int points;
+    private int level;
     private int nextMeteorInterval;
     private int enemyCounter;
+    private Font spaceFont;
+    private final int fontSize = 22;
+    private int enemiesDestroyed;
+    private int meteorsDestroyed;
+    private int powerupsCollected;
+    private final double nextPowerUpTime = 20;
 
     public GameLogic(GamePanel gamepanel) {
         gp = gamepanel;
@@ -34,23 +48,32 @@ public class GameLogic {
         time = 0;
         fpsCounter = 0;
         points = 0;
+        level = 1;
         nextMeteorInterval = 3;
         enemyCounter = 0;
+        enemiesDestroyed = 0;
+        meteorsDestroyed = 0;
+        powerupsCollected = 0;
         backGround = new BackGround();
         laserList = new ArrayList<>();
         explosionList = new ArrayList<>();
         player = new PlayerSpaceShip(gp, laserList, explosionList);
         enemyList = new ArrayList<>();
         meteorList = new ArrayList<>();
-
+        powerUpList = new ArrayList<>();
+        spaceFont = new Font("OCR A Extended", Font.BOLD, fontSize);
+        System.out.println(spaceFont);
     }
     public void gameUpdate() {
         fpsCounter++;
         if(fpsCounter % 60 == 0) {
             fpsCounter = 0;
             time++;
+            points++;
             if(time % nextMeteorInterval == 0)
                 meteorInvoke();
+            if(time != 0 && time % nextPowerUpTime == 0)
+                addPowerUp();
         }
         backGround.update();
         checkCollision();
@@ -62,9 +85,7 @@ public class GameLogic {
     }
 
     public boolean end() {
-        if(exit || !player.isAlive())
-            return true;
-        return false;
+        return (exit || !player.isAlive());
     }
 
     public void draw(Graphics2D g) {
@@ -74,6 +95,29 @@ public class GameLogic {
         player.draw(g);
         drawEnemies(g);
         drawExplosions(g);
+        updatePowerUps();
+        drawPoints(g);
+        drawPowerUps(g);
+    }
+
+    private void addPowerUp() {
+        powerUpList.add(new PowerUp(gp.getScreenDimension()));
+    }
+    private void updatePowerUps() {
+
+        Iterator<PowerUp> powerUpIterator = powerUpList.iterator();
+        while(powerUpIterator.hasNext()) {
+            PowerUp powerup = powerUpIterator.next();
+            powerup.update();
+            if(powerup.isOutOfBounds)
+                powerUpIterator.remove();
+        }
+    }
+
+    private void drawPowerUps(Graphics2D g) {
+        for(PowerUp powerup : powerUpList) {
+            powerup.draw(g);
+        }
     }
 
     private void updateEnemies() {
@@ -90,6 +134,10 @@ public class GameLogic {
                 enemy.update();
                 if(enemy.isExploded()) {
                     enemyIterator.remove();
+                    enemiesDestroyed++;
+                    points += 50;
+                    if (enemiesDestroyed != 0 && enemiesDestroyed % 5 == 0)
+                        addPowerUp();
                 }
             }
         }
@@ -162,16 +210,20 @@ public class GameLogic {
             if(laser.isPlayerLaser()) {
                 for(EnemySpaceShip enemy : enemyList) {
                     Ellipse2D.Double enemyBounds = enemy.getSpaceShipBounds();
-                         if(enemyBounds.intersects(laserBounds)) {
+                    if(enemyBounds.intersects(laserBounds) && !laser.isOutOfBounds) {
                         enemy.damageShip();
                         laser.hitEntity();
                     }
                 }
                 for(Meteor meteor : meteorList) {
                     Ellipse2D.Double meteorBounds = meteor.getMeteorBounds();
-                    if (meteorBounds.intersects(laserBounds)) {
+                    if (meteorBounds.intersects(laserBounds) && !laser.isOutOfBounds) {
                         meteor.explode();
                         laser.hitEntity();
+                        meteorsDestroyed++;
+                        if(meteorsDestroyed != 0 && meteorsDestroyed % 5 == 0)
+                            addPowerUp();
+                        points += 15;
                     }
                 }
             } else {
@@ -188,5 +240,26 @@ public class GameLogic {
                 meteor.explode();
             }
         }
+
+        Iterator<PowerUp> powerUpIterator = powerUpList.iterator();
+        while(powerUpIterator.hasNext()) {
+            PowerUp powerup = powerUpIterator.next();
+            if(playerBounds.intersects(powerup.getPowerUpBounds()) && !powerup.isOutOfBounds) {
+                powerup.isOutOfBounds = true;
+                player.collectPowerUp(powerup.getType());
+                powerUpIterator.remove();
+            }
+        }
+
+    }
+
+    private void drawPoints(Graphics2D g) {
+        g.setFont(spaceFont);
+        g.setColor(Color.WHITE);
+        g.drawString("HIGHSCORE: "+0, 900, 30);
+        g.drawString("SCORE: "+points, 900, 52);
+        g.drawString("TIME: "+time+" s", 900, 74);
+        g.drawString("Level: "+level, 15, 32);
     }
 }
+

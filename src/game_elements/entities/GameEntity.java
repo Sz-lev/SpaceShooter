@@ -1,10 +1,10 @@
-package game_elements;
+package game_elements.entities;
 
 import java.awt.*;
 
-abstract class GameEntity {
-    protected int maxCoordinateOfX;
-    protected int maxCoordinateOfY;
+public abstract class GameEntity {
+    public int maxCoordinateOfX;
+    public int maxCoordinateOfY;
     protected int xCoordinate;
     protected int yCoordinate;
     protected int speed;
@@ -29,25 +29,29 @@ abstract class GameEntity {
         this.speed = speed;
     }
 
-    public void setSpeed(int speed) {
+    protected void setSpeed(int speed) {
         this.speed = speed;
     }
 
-    public void setxCoordinate(int x) {
+    protected void setxCoordinate(int x) {
         xCoordinate = x;
     }
-    public int getxCoordinate() {
+    protected int getxCoordinate() {
         return xCoordinate;
     }
 
-    public void setyCoordinate(int y) {
+    protected void setyCoordinate(int y) {
         yCoordinate = y;
     }
-    public int getyCoordinate() {
+    protected int getyCoordinate() {
         return yCoordinate;
     }
 
-    abstract void update();
-    abstract void draw(Graphics2D g);
+    protected Dimension getSize() {
+        return new Dimension(size_x, size_y);
+    }
+
+    protected abstract void update();
+    protected abstract void draw(Graphics2D g);
 }
 
