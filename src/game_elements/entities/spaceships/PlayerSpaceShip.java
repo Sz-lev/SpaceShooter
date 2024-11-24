@@ -165,9 +165,10 @@ public class PlayerSpaceShip extends SpaceShip{
         if(hit == false || currentTime - lastHitTime > invincibleTime) {
             if(shield != null)
                 shield.damage();
-            else
-                health--;
-            lastHitTime = currentTime;
+            else {
+//                health--;
+                lastHitTime = currentTime;
+            }
             hit = true;
         }
     }

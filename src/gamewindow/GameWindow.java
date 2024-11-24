@@ -7,11 +7,11 @@ import java.awt.event.ActionListener;
 
 public class GameWindow {
 
-    private final int WIDTH = 1080;
-    private final int HEIGTH = 720;
-    private JFrame window;
-    private JPanel menu;
-    private GamePanel gamePanel;
+    public final int WIDTH = 1080;
+    public final int HEIGTH = 720;
+    public JFrame window;
+    public GameMenu menu;
+    public GamePanel gamePanel;
 
     private int gameState;
 
@@ -24,7 +24,6 @@ public class GameWindow {
         window.setTitle("SpaceShooter");
         window.setSize(WIDTH, HEIGTH);
         window.setResizable(true);
-        window.setLayout(null);
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         window.setLocationRelativeTo(null);
         window.setFocusable(true);
@@ -37,17 +36,11 @@ public class GameWindow {
             window.remove(gamePanel);
             gamePanel = null;
         }
-
-        menu = new JPanel();
-        JButton jb = new JButton("Play");
-        jb.addActionListener(new PlayActionListener());
-        menu.add(jb);
-        window.add(menu);
-        menu.setSize(400, 500);
-        window.getContentPane().setPreferredSize(new Dimension(400, 500));
+        menu = new GameMenu(this);
+        window.getContentPane().setPreferredSize(menu.getMenuDimension());
+        window.add(menu, BorderLayout.CENTER);
         window.pack();
         window.setVisible(true);
-
     }
 
     public void addGamePanel() {
@@ -55,14 +48,12 @@ public class GameWindow {
             window.remove(menu);
             menu = null;
         }
-
-        GamePanel gamepanel = new GamePanel(this);
-        window.add(gamepanel);
-        window.getContentPane().setPreferredSize(new Dimension(WIDTH, HEIGTH));
+        gamePanel = new GamePanel(this);
+        window.add(gamePanel);
+        window.getContentPane().setPreferredSize(gamePanel.getPanelDimension());
         window.pack();
         window.setVisible(true);
-        gamepanel.requestFocusInWindow();
-        menu = null;
+        gamePanel.requestFocusInWindow();
     }
 
 

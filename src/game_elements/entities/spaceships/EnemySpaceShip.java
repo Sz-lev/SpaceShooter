@@ -40,6 +40,7 @@ public class EnemySpaceShip extends SpaceShip{
     private double xDoublecoord, yDoubleCoord;
     private boolean exploded;
     private HealthBar healthBar;
+    private boolean arrivedInScreen;
 
     public EnemySpaceShip(int x, int y, int speed) {
         super(x, y, speed);
@@ -96,8 +97,6 @@ public class EnemySpaceShip extends SpaceShip{
     }
 
 
-
-
     public void update() {
 
         xDoublecoord += speedX;
@@ -105,7 +104,7 @@ public class EnemySpaceShip extends SpaceShip{
         xCoordinate = (int) xDoublecoord;
         yCoordinate = (int) yDoubleCoord;
         healthBar.update(new Dimension(xCoordinate+size_x/2, yCoordinate));
-
+//        isOutOfBounds();
         if(calculateArrival()) {
             nextCoordRandomizer();
             calculateRoute();
@@ -113,6 +112,7 @@ public class EnemySpaceShip extends SpaceShip{
                 shootLaser();
             }
         }
+
     }
 
 
@@ -171,7 +171,7 @@ public class EnemySpaceShip extends SpaceShip{
             highY = nextY;
         }
 
-        return lowX > highX && lowY > highY;
+        return lowX >= highX && lowY >= highY;
     }
 
     private void explode() {
@@ -192,5 +192,17 @@ public class EnemySpaceShip extends SpaceShip{
         if(health == 0)
             explode();
     }
+
+//    public void isOutOfBounds() {
+//        if(arrivedInScreen && (xCoordinate > maxCoordinateOfX || xCoordinate < 0 || yCoordinate < 0 || yCoordinate > maxCoordinateOfY)) {
+//            System.out.println("next x: "+nextX);
+//            System.out.println("next y: "+nextY);
+//            System.out.println("speed x: "+speedX);
+//            System.out.println("speed y: "+speedY);
+//            System.out.println("current x: "+xDoublecoord);
+//            System.out.println("current y: "+yDoubleCoord+"\n");
+//        } else if (yCoordinate > 0)
+//            arrivedInScreen = true;
+//    }
 
 }

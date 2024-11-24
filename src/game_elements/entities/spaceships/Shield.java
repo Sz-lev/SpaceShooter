@@ -30,6 +30,8 @@ public class Shield {
     private int shieldHit;
     private int posX, posY, sizeX, sizeY;
     private BufferedImage image;
+    private final int timeLast = 20;
+    private double startTime;
 
     public Shield(PlayerSpaceShip spaceShip) {
         this.spaceShip = spaceShip;
@@ -42,6 +44,7 @@ public class Shield {
         sizeX = image.getWidth();
         sizeY = image.getHeight();
         calculatePos();
+        startTime = System.currentTimeMillis()/1000.0;
     }
 
     private void calculatePos() {
@@ -61,10 +64,14 @@ public class Shield {
 
     public void update() {
         calculatePos();
+        if(System.currentTimeMillis()/1000.0 - startTime > timeLast)
+            spaceShip.loseShield();
     }
 
     public void draw(Graphics2D g) {
-        g.drawImage(image, posX, posY, null);
+        double timeTicked = System.currentTimeMillis()/1000.0 - startTime;
+        if(timeTicked < 16 || (int) (timeTicked*10) % 3 != 0)
+            g.drawImage(image, posX, posY, null);
     }
 
     public Ellipse2D.Double getShieldBounds() {

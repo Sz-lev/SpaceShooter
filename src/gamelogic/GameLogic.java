@@ -16,7 +16,6 @@ import game_elements.explosions.Explosion;
 import gamewindow.GamePanel;
 
 public class GameLogic {
-    private boolean exit;
     private BackGround backGround;
     public PlayerSpaceShip player;
     private List<EnemySpaceShip> enemyList;
@@ -37,6 +36,8 @@ public class GameLogic {
     private int meteorsDestroyed;
     private int powerupsCollected;
     private final double nextPowerUpTime = 20;
+    private GamePauseMenu gamePauseMenu;
+    public int gameState;
 
     public GameLogic(GamePanel gamepanel) {
         gp = gamepanel;
@@ -44,7 +45,6 @@ public class GameLogic {
     }
 
     public void gameInit() {
-        exit = false;
         time = 0;
         fpsCounter = 0;
         points = 0;
@@ -65,39 +65,53 @@ public class GameLogic {
         System.out.println(spaceFont);
     }
     public void gameUpdate() {
-        fpsCounter++;
-        if(fpsCounter % 60 == 0) {
-            fpsCounter = 0;
-            time++;
-            points++;
-            if(time % nextMeteorInterval == 0)
-                meteorInvoke();
-            if(time != 0 && time % nextPowerUpTime == 0)
-                addPowerUp();
+        if(!gp.getGameKeyListener().pause) {
+            fpsCounter++;
+            if(fpsCounter % 60 == 0) {
+                fpsCounter = 0;
+                time++;
+                points++;
+                if(time % nextMeteorInterval == 0)
+                    meteorInvoke();
+                if(time != 0 && time % nextPowerUpTime == 0)
+                    addPowerUp();
+            }
+            backGround.update();
+            checkCollision();
+            player.update();
+            updateEnemies();
+            updateLasers();
+            updateMeteors();
+            updateExplosions();
+            if(gamePauseMenu != null) {
+                gamePauseMenu = null;
+                gameState = 0;
+            }
+        } else if (gamePauseMenu == null) {
+            gamePauseMenu = new GamePauseMenu(gp.getPanelDimension(), gp.getGameKeyListener());
+            gameState = 1;
         }
-        backGround.update();
-        checkCollision();
-        player.update();
-        updateEnemies();
-        updateLasers();
-        updateMeteors();
-        updateExplosions();
+        else
+            gameState = gamePauseMenu.update();
     }
 
     public boolean end() {
-        return (exit || !player.isAlive());
+        return (gameState == 2 || !player.isAlive());
     }
 
     public void draw(Graphics2D g) {
-        backGround.draw(g);
-        drawLasers(g);
-        drawMeteors(g);
-        player.draw(g);
-        drawEnemies(g);
-        drawExplosions(g);
-        updatePowerUps();
-        drawPoints(g);
-        drawPowerUps(g);
+
+            backGround.draw(g);
+            drawLasers(g);
+            drawMeteors(g);
+            player.draw(g);
+            drawEnemies(g);
+            drawExplosions(g);
+            updatePowerUps();
+            drawPoints(g);
+            drawPowerUps(g);
+        if(gamePauseMenu != null)
+            gamePauseMenu.draw(g);
     }
 
     private void addPowerUp() {

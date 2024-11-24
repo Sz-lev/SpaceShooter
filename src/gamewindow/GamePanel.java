@@ -64,4 +64,8 @@ public class GamePanel extends JPanel{
         this.gamelogic = gamelogic;
     }
 
+    public Dimension getPanelDimension() {
+        return  new Dimension(WIDTH, HEIGTH);
+    }
+
 }
