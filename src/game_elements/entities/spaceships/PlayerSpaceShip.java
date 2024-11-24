@@ -166,7 +166,7 @@ public class PlayerSpaceShip extends SpaceShip{
             if(shield != null)
                 shield.damage();
             else {
-//                health--;
+                health--;
                 lastHitTime = currentTime;
             }
             hit = true;

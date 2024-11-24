@@ -88,7 +88,7 @@ public class GameLogic {
                 gameState = 0;
             }
         } else if (gamePauseMenu == null) {
-            gamePauseMenu = new GamePauseMenu(gp.getPanelDimension(), gp.getGameKeyListener());
+            gamePauseMenu = new GamePauseMenu(gp.getPanelDimension(), gp.getGameKeyListener(), gp.gameML);
             gameState = 1;
         }
         else
@@ -259,6 +259,7 @@ public class GameLogic {
         while(powerUpIterator.hasNext()) {
             PowerUp powerup = powerUpIterator.next();
             if(playerBounds.intersects(powerup.getPowerUpBounds()) && !powerup.isOutOfBounds) {
+                powerupsCollected++;
                 powerup.isOutOfBounds = true;
                 player.collectPowerUp(powerup.getType());
                 powerUpIterator.remove();

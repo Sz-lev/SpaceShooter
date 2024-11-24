@@ -22,10 +22,8 @@ public class GameWindow {
     public void initWindow() {
         window = new JFrame();
         window.setTitle("SpaceShooter");
-        window.setSize(WIDTH, HEIGTH);
         window.setResizable(true);
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        window.setLocationRelativeTo(null);
         window.setFocusable(true);
         addMenu();
     }
@@ -37,6 +35,8 @@ public class GameWindow {
             gamePanel = null;
         }
         menu = new GameMenu(this);
+        window.setSize(400, 500);
+        window.setLocationRelativeTo(null);
         window.getContentPane().setPreferredSize(menu.getMenuDimension());
         window.add(menu, BorderLayout.CENTER);
         window.pack();
@@ -50,6 +50,8 @@ public class GameWindow {
         }
         gamePanel = new GamePanel(this);
         window.add(gamePanel);
+        window.setSize(WIDTH, HEIGTH);
+        window.setLocationRelativeTo(null);
         window.getContentPane().setPreferredSize(gamePanel.getPanelDimension());
         window.pack();
         window.setVisible(true);

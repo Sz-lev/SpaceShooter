@@ -1,0 +1,32 @@
+[
+  {
+    "name": "valaki1",
+    "id": 23,
+    "meteorsDestroyed": 4,
+    "enemyShipsDestroyed": 0,
+    "timePlayed": 8.0,
+    "powerupsCollected": 6,
+    "highscore": 1111,
+    "gamesPlayed": 12
+  },
+  {
+    "name": "valaki2",
+    "id": 24,
+    "meteorsDestroyed": 33,
+    "enemyShipsDestroyed": 3333,
+    "timePlayed": 0.0,
+    "powerupsCollected": 4,
+    "highscore": 14321,
+    "gamesPlayed": 4
+  },
+  {
+    "name": "valaki3",
+    "id": 25,
+    "meteorsDestroyed": 4,
+    "enemyShipsDestroyed": 4,
+    "timePlayed": 4.0,
+    "powerupsCollected": 4,
+    "highscore": 4,
+    "gamesPlayed": 4
+  }
+]

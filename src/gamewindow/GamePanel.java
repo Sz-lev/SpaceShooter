@@ -16,19 +16,24 @@ public class GamePanel extends JPanel{
     private final int WIDTH = 1080;
     private final int HEIGTH = 720;
     private Thread gameThread;
-    private GameKeyListener gameKL = new GameKeyListener();
+    private GameKeyListener gameKL;
+    public GameMouseListener gameML;
     private GameLogic gamelogic;
-
     private GameWindow gameWindow;
 
     /*
      * A GamePanel konstruktora
      */
     public GamePanel(GameWindow gameWindow) {
+        gameKL = new GameKeyListener();
+        gameML = new GameMouseListener();
+
         setSize(WIDTH, HEIGTH);
         setDoubleBuffered(true);
         setFocusable(true);
         addKeyListener(gameKL);
+        addMouseListener(gameML);
+        addMouseMotionListener(gameML);
         this.gameWindow = gameWindow;
         play();
     }

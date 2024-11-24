@@ -1,0 +1,10 @@
+valaki5,1011,10
+valaki6,1011,13
+valaki13,180,110
+valaki12,180,110
+valaki15,101,101
+valaki4,100,13
+valaki11,60,10
+valaki16,60,10
+valaki10,50,16
+valaki3,50,110
