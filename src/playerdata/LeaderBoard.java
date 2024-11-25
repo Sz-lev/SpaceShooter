@@ -7,7 +7,7 @@ import java.util.List;
 
 public class LeaderBoard extends AbstractTableModel {
 
-    public List<Result> resultList;
+    public static List<Result> resultList = new ArrayList<>();
     public final int maxSize = 10;
 
     private static final String[] columnNames = {
@@ -17,9 +17,9 @@ public class LeaderBoard extends AbstractTableModel {
             "Idő"
     };
     public LeaderBoard() {
-        resultList = new ArrayList<>();
-        if(!readLeaderboardFile("./data/leaderboard.txt"))
-            System.out.println("Sikertelen fájl beolvasás");
+//        resultList = new ArrayList<>();
+//        if(!readLeaderboardFile("./data/leaderboard.txt"))
+//            System.out.println("Sikertelen fájl beolvasás");
     }
 
     @Override
@@ -62,7 +62,7 @@ public class LeaderBoard extends AbstractTableModel {
 
 
 
-    public boolean readLeaderboardFile(String fileName)  {
+    public static boolean readLeaderboardFile(String fileName)  {
         File file = new File(fileName);
         try {
             BufferedReader br = new BufferedReader(new FileReader(file));
@@ -76,7 +76,7 @@ public class LeaderBoard extends AbstractTableModel {
 
                     if(!name.equals("")) {
                         Result newRes = new Result(name, point, time);
-                        addResult(newRes);
+                        resultList.add(newRes);
                     }
                 }
             }
@@ -86,10 +86,12 @@ public class LeaderBoard extends AbstractTableModel {
             e.printStackTrace();
             return false;
         }
+        resultList.sort(Result::compareTo);
+        resultList = resultList.subList(0, 10);
         return true;
     }
 
-    public boolean writeLeaderboardToFile(String fileName) {
+    public static boolean writeLeaderboardToFile(String fileName) {
         File file = new File(fileName);
 
         try {

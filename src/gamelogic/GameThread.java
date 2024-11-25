@@ -19,11 +19,8 @@ public class GameThread extends Thread{
         while(!gamelogic.end()) {
             double updateBeginTime = System.nanoTime();
 
-
             gamelogic.gameUpdate();
             gamepanel.repaint();
-
-
 
             double timeSpent = System.nanoTime()-updateBeginTime;
             long nextDrawTime = (long) (drawTime-timeSpent)/1000000;
@@ -34,9 +31,7 @@ public class GameThread extends Thread{
                     throw new RuntimeException(e);
                 }
             }
-
         }
-        gamepanel.update();
-
+        gamepanel.returnToMenu();
     }
 }

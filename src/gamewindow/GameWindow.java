@@ -1,5 +1,10 @@
 package gamewindow;
 
+import playerdata.LeaderBoard;
+import playerdata.PlayerData;
+import playerdata.Profiles;
+import playerdata.Result;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -12,6 +17,7 @@ public class GameWindow {
     public JFrame window;
     public GameMenu menu;
     public GamePanel gamePanel;
+    public PlayerData player;
 
     private int gameState;
 
@@ -25,9 +31,10 @@ public class GameWindow {
         window.setResizable(true);
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         window.setFocusable(true);
+        Profiles.readJSONFile("./data/profiles.json");
+        LeaderBoard.readLeaderboardFile("./data/leaderboard.txt");
         addMenu();
     }
-
 
     public void addMenu() {
         if(gamePanel != null) {

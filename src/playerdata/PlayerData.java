@@ -15,6 +15,7 @@ public class PlayerData {
     public int powerupsCollected;
     public int highscore;
     public int gamesPlayed;
+    public int maxLevel;
 
     public PlayerData() {}
     public PlayerData(String name) {
@@ -52,5 +53,12 @@ public class PlayerData {
     public void addGamesPlayed(int num) {
         gamesPlayed += num;
     }
+    public void setMaxLevel(int level) {
+        if(level > maxLevel)
+            maxLevel = level;
+    }
 
+    public String toString() {
+        return name;
+    }
 }

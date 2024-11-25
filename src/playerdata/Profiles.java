@@ -10,14 +10,13 @@ import org.json.*;
 
 public class Profiles {
 
-    public HashMap<Integer, PlayerData> playerList;
+    public static ArrayList<PlayerData> playerList = new ArrayList<>();
 
-    public Profiles() {
-        playerList = new HashMap<>();
+//    public Profiles() {
+//        playerList = new HashMap<>();
+//    }
 
-    }
-
-    public void readJSONFile(String fileName) {
+    public static void readJSONFile(String fileName) {
         File file = new File(fileName);
         String fileData = new String();
         try {
@@ -31,39 +30,42 @@ public class Profiles {
             e.printStackTrace();
         }
 
-        JSONArray dataArray = new JSONArray(fileData);
+        if(!fileData.isEmpty()) {
 
-        for(int i = 0; i < dataArray.length(); i++) {
-            JSONObject jObject = dataArray.getJSONObject(i);
-
-            PlayerData player = new PlayerData();
-            player.setName(jObject.getString("name"));
-            player.setId(jObject.getInt("id"));
-            player.addMeteorsDestroyed(jObject.getInt("meteorsDestroyed"));
-            player.addEnemyShipDestroyed(jObject.getInt("enemyShipsDestroyed"));
-            player.addTimePlayed(jObject.getDouble("timePlayed"));
-            player.addPUCollected(jObject.getInt("powerupsCollected"));
-            player.setHighScore(jObject.getInt("highscore"));
-            player.addGamesPlayed(jObject.getInt("gamesPlayed"));
-            playerList.put(player.getId(), player);
-
-//            System.out.println("Név"+ jObject.getString("név"));
-//            System.out.println("kor"+ jObject.getInt("kor"));
-//            System.out.println("átlag"+ jObject.getInt("átlag")+"\n");
         }
+        try {
+            JSONArray dataArray = new JSONArray(fileData);
+
+            for(int i = 0; i < dataArray.length(); i++) {
+                JSONObject jObject = dataArray.getJSONObject(i);
+
+                PlayerData player = new PlayerData();
+                player.setName(jObject.getString("name"));
+                player.setId(jObject.getInt("id"));
+                player.addMeteorsDestroyed(jObject.getInt("meteorsDestroyed"));
+                player.addEnemyShipDestroyed(jObject.getInt("enemyShipsDestroyed"));
+                player.addTimePlayed(jObject.getDouble("timePlayed"));
+                player.addPUCollected(jObject.getInt("powerupsCollected"));
+                player.setHighScore(jObject.getInt("highscore"));
+                player.addGamesPlayed(jObject.getInt("gamesPlayed"));
+                player.addGamesPlayed(jObject.getInt("maxLevel"));
+                playerList.add(player);
+
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 
-    public PlayerData getPlayerByID(int id) {
-        return playerList.get(id);
-    }
 
-    public void writeJSONFile(String fileName) {
+    public static void writeJSONFile(String fileName) {
         File file = new File(fileName);
         String fileData = new String();
         try {
 
             JSONArray playerJsonArray = new JSONArray();
-            for(PlayerData player : playerList.values()) {
+            for(PlayerData player : playerList) {
                 JSONObject playerJson = new JSONObject();
                 playerJson.put("name", player.name);
                 playerJson.put("id", player.getId());
@@ -73,6 +75,7 @@ public class Profiles {
                 playerJson.put("powerupsCollected", player.powerupsCollected);
                 playerJson.put("highscore", player.highscore);
                 playerJson.put("gamesPlayed", player.gamesPlayed);
+                playerJson.put("maxLevel", player.maxLevel);
                 playerJsonArray.put(playerJson);
             }
 
@@ -84,5 +87,8 @@ public class Profiles {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+    public static ArrayList<PlayerData> getPlayerList() {
+        return playerList;
     }
 }

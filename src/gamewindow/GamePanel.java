@@ -43,9 +43,10 @@ public class GamePanel extends JPanel{
         gameThread.start();
     }
 
-    public void update() {
+    public void returnToMenu() {
         gameWindow.addMenu();
     }
+
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
 
