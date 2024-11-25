@@ -19,7 +19,7 @@ public class GamePanel extends JPanel{
     private GameKeyListener gameKL;
     public GameMouseListener gameML;
     private GameLogic gamelogic;
-    private GameWindow gameWindow;
+    public GameWindow gameWindow;
 
     /*
      * A GamePanel konstruktora

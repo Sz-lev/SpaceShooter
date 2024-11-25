@@ -12,10 +12,6 @@ public class Profiles {
 
     public static ArrayList<PlayerData> playerList = new ArrayList<>();
 
-//    public Profiles() {
-//        playerList = new HashMap<>();
-//    }
-
     public static void readJSONFile(String fileName) {
         File file = new File(fileName);
         String fileData = new String();
@@ -48,7 +44,7 @@ public class Profiles {
                 player.addPUCollected(jObject.getInt("powerupsCollected"));
                 player.setHighScore(jObject.getInt("highscore"));
                 player.addGamesPlayed(jObject.getInt("gamesPlayed"));
-                player.addGamesPlayed(jObject.getInt("maxLevel"));
+                player.setMaxLevel(jObject.getInt("maxLevel"));
                 playerList.add(player);
 
             }
@@ -61,9 +57,7 @@ public class Profiles {
 
     public static void writeJSONFile(String fileName) {
         File file = new File(fileName);
-        String fileData = new String();
         try {
-
             JSONArray playerJsonArray = new JSONArray();
             for(PlayerData player : playerList) {
                 JSONObject playerJson = new JSONObject();
@@ -78,7 +72,6 @@ public class Profiles {
                 playerJson.put("maxLevel", player.maxLevel);
                 playerJsonArray.put(playerJson);
             }
-
 
             FileWriter fw = new FileWriter(file);
             fw.write(playerJsonArray.toString(4));

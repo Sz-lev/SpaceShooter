@@ -8,10 +8,10 @@ import java.util.List;
 public class LeaderBoard extends AbstractTableModel {
 
     public static List<Result> resultList = new ArrayList<>();
-    public final int maxSize = 10;
+    public static final int maxSize = 10;
 
     private static final String[] columnNames = {
-            "Rang",
+            "Helyezés",
             "Név",
             "Pont",
             "Idő"
@@ -38,9 +38,17 @@ public class LeaderBoard extends AbstractTableModel {
             case 0: return rowIndex+1;
             case 1: return resultList.get(rowIndex).name;
             case 2: return resultList.get(rowIndex).point;
-            default: return resultList.get(rowIndex).time;
-
+            default: return roundDouble(resultList.get(rowIndex).time, 2);
         }
+    }
+
+    public Double roundDouble(Double number, int places) {
+        if(places > 0) {
+            double multiplyBy =  Math.pow(10.0, places);
+            int newNum = (int) (number*multiplyBy);
+            return  newNum / multiplyBy;
+        }
+        return null;
     }
 
     @Override
@@ -54,7 +62,7 @@ public class LeaderBoard extends AbstractTableModel {
             case 0: return Integer.class;
             case 1: return String.class;
             case 2: return Integer.class;
-            default: return Integer.class;
+            default: return Double.class;
 
         }
     }
@@ -72,7 +80,7 @@ public class LeaderBoard extends AbstractTableModel {
                 if(rowElements.length == 3) {
                     String name = rowElements[0];
                     int point = Integer.parseInt(rowElements[1]);
-                    int time = Integer.parseInt(rowElements[2]);
+                    double time = Double.parseDouble(rowElements[2]);
 
                     if(!name.equals("")) {
                         Result newRes = new Result(name, point, time);
@@ -87,7 +95,8 @@ public class LeaderBoard extends AbstractTableModel {
             return false;
         }
         resultList.sort(Result::compareTo);
-        resultList = resultList.subList(0, 10);
+        if(resultList.size() > maxSize)
+            resultList = resultList.subList(0, 10);
         return true;
     }
 
@@ -111,13 +120,12 @@ public class LeaderBoard extends AbstractTableModel {
     }
 
 
-    public void addResult(Result res) {
+    public static void addResult(Result res) {
         resultList.add(res);
         resultList.sort(Result::compareTo);
         if(resultList.size() > 10) {
             resultList.remove(maxSize);
         }
-        fireTableDataChanged();
     }
 
 

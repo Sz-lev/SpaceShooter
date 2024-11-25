@@ -14,6 +14,9 @@ import game_elements.entities.spaceships.Laser;
 import game_elements.entities.spaceships.PlayerSpaceShip;
 import game_elements.explosions.Explosion;
 import gamewindow.GamePanel;
+import playerdata.LeaderBoard;
+import playerdata.PlayerData;
+import playerdata.Result;
 
 public class GameLogic {
     private BackGround backGround;
@@ -28,7 +31,8 @@ public class GameLogic {
     private int fpsCounter;
     private int points;
     private int level;
-    private int nextMeteorInterval;
+    private double nextMeteorInterval;
+    private double lastMeteorTime;
     private int enemyCounter;
     private Font spaceFont;
     private final int fontSize = 22;
@@ -48,8 +52,8 @@ public class GameLogic {
         time = 0;
         fpsCounter = 0;
         points = 0;
-        level = 1;
-        nextMeteorInterval = 3;
+        level = 0;
+        nextMeteorInterval = 3.0;
         enemyCounter = 0;
         enemiesDestroyed = 0;
         meteorsDestroyed = 0;
@@ -71,8 +75,6 @@ public class GameLogic {
                 fpsCounter = 0;
                 time++;
                 points++;
-                if(time % nextMeteorInterval == 0)
-                    meteorInvoke();
                 if(time != 0 && time % nextPowerUpTime == 0)
                     addPowerUp();
             }
@@ -95,7 +97,26 @@ public class GameLogic {
             gameState = gamePauseMenu.update();
     }
 
+    public void nextLevel() {
+        level++;
+        if(level % 2 == 0 && nextMeteorInterval > 1)
+            nextMeteorInterval -= 0.2;
+        else
+            enemyCounter++;
+    }
     public boolean end() {
+        if(!player.isAlive()) {
+            PlayerData plyr = gp.gameWindow.player;
+            plyr.addEnemyShipDestroyed(enemiesDestroyed);
+            plyr.addMeteorsDestroyed(meteorsDestroyed);
+            plyr.addTimePlayed(time+fpsCounter/60.0);
+            plyr.setHighScore(points);
+            plyr.setMaxLevel(level-1);
+            plyr.addPUCollected(powerupsCollected);
+            plyr.addGamesPlayed(1);
+            LeaderBoard.addResult(new Result(plyr.name, points, time+fpsCounter/60.0));
+
+        }
         return (gameState == 2 || !player.isAlive());
     }
 
@@ -136,7 +157,7 @@ public class GameLogic {
 
     private void updateEnemies() {
         if(enemyList.isEmpty()) {
-            enemyCounter++;
+            nextLevel();
             for(int i = 0; i < enemyCounter; i++) {
                 enemyList.add(new EnemySpaceShip(gp.getScreenDimension(), laserList, explosionList));
             }
@@ -185,6 +206,10 @@ public class GameLogic {
     }
 
     private void updateMeteors() {
+        if(System.currentTimeMillis()/1000.0 - lastMeteorTime > nextMeteorInterval) {
+            lastMeteorTime = System.currentTimeMillis()/1000.0;
+            meteorInvoke();
+        }
         Iterator<Meteor> meteorIterator = meteorList.iterator();
         while(meteorIterator.hasNext()) {
             Meteor meteor = meteorIterator.next();

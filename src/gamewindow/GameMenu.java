@@ -10,9 +10,9 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.Map;
 
 public class GameMenu extends JPanel {
-
     public final int WIDTH = 400;
     public final int HEIGTH = 500;
     public GameWindow gameWindow;
@@ -107,8 +107,10 @@ public class GameMenu extends JPanel {
     }
 
     public void addRanglistaTable() {
+        gameWindow.window.setVisible(false);
+
         JFrame rangFrame = new JFrame();
-        rangFrame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+        rangFrame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
         rangFrame.setMinimumSize(new Dimension(400, 250));
         rangFrame.setTitle("Ranglista");
 
@@ -123,6 +125,7 @@ public class GameMenu extends JPanel {
         centerRenderer.setHorizontalAlignment( JLabel.CENTER );
         rangTable.setDefaultRenderer(String.class, centerRenderer);
         rangTable.setDefaultRenderer(Integer.class, centerRenderer);
+        rangTable.setDefaultRenderer(Double.class, centerRenderer);
         JScrollPane scroll = new JScrollPane(rangTable);
         rangFrame.add(scroll, BorderLayout.CENTER);
 
@@ -130,6 +133,7 @@ public class GameMenu extends JPanel {
         backButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                gameWindow.window.setVisible(true);
                 rangFrame.dispose();
             }
         });
@@ -141,16 +145,25 @@ public class GameMenu extends JPanel {
     }
 
     public void profileScreen() {
+        gameWindow.window.setVisible(false);
+
         profilFrame = new JFrame();
-        profilFrame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+        profilFrame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
         profilFrame.setTitle("Profilok");
 
         playerModel = new DefaultListModel();
         playerModel.addAll(playerList);
 
-        JPanel bottomPanel = new JPanel(new FlowLayout());
+        JPanel topPanel = new JPanel(new FlowLayout());
+        JLabel newProfileLabel = new JLabel("Új profil:");
+        topPanel.add(newProfileLabel);
+
         textField = new JTextField(20);
         textField.addActionListener(new addPlayer());
+        topPanel.add(textField);
+
+        JPanel buttonsPanel = new JPanel();
+        buttonsPanel.setLayout(new FlowLayout());
 
         JButton proceedButton = new JButton("Kiválaszt");
         proceedButton.addActionListener(new proceedAction());
@@ -161,10 +174,9 @@ public class GameMenu extends JPanel {
         JButton backButton = new JButton("Vissza");
         backButton.addActionListener(new backAction());
 
-        bottomPanel.add(textField);
-        bottomPanel.add(proceedButton);
-        bottomPanel.add(deleteButton);
-        bottomPanel.add(backButton);
+        buttonsPanel.add(proceedButton);
+        buttonsPanel.add(deleteButton);
+        buttonsPanel.add(backButton);
 
         listAblak = new JList<>(playerModel);
         listAblak.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -174,10 +186,62 @@ public class GameMenu extends JPanel {
         JScrollPane scrollPane = new JScrollPane(listAblak);
 
         profilFrame.add(scrollPane, BorderLayout.CENTER);
-        profilFrame.add(bottomPanel, BorderLayout.SOUTH);
+        profilFrame.add(topPanel, BorderLayout.NORTH);
+        profilFrame.add(buttonsPanel, BorderLayout.SOUTH);
         profilFrame.pack();
         profilFrame.setLocationRelativeTo(null);
+        profilFrame.setResizable(false);
         profilFrame.setVisible(true);
+    }
+
+    public void addAchievmentsScreen() {
+        gameWindow.window.setVisible(false);
+
+        JFrame achScreen = new JFrame();
+        achScreen.setTitle("Kitüntetések");
+        achScreen.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+
+        JPanel cimSor = new JPanel(new FlowLayout());
+
+
+        JLabel jatekos = new JLabel(gameWindow.player.name+" kitüntetései");
+
+        jatekos.setFont(new Font("Arial", Font.BOLD, 14));
+        cimSor.add(jatekos);
+        achScreen.add(cimSor, BorderLayout.NORTH);
+
+        PlayerDataTable pdt = new PlayerDataTable(gameWindow.player);
+        JTable achTable = new JTable(pdt);
+        achTable.setFillsViewportHeight(true);
+        achTable.setBackground(bgColor);
+        achTable.setForeground(Color.WHITE);
+        achTable.setFont(new Font("Arial", Font.BOLD, 14));
+        achTable.setRowHeight(30);
+        DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+        centerRenderer.setHorizontalAlignment( JLabel.CENTER );
+        achTable.setDefaultRenderer(String.class, centerRenderer);
+        achTable.setDefaultRenderer(Integer.class, centerRenderer);
+        achTable.setDefaultRenderer(Double.class, centerRenderer);
+        JScrollPane scroll = new JScrollPane(achTable);
+        achScreen.add(scroll, BorderLayout.CENTER);
+
+        JButton backButton = new JButton("Vissza");
+        backButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                achScreen.dispose();
+                gameWindow.window.setVisible(true);
+            }
+        });
+
+        achScreen.add(backButton, BorderLayout.SOUTH);
+
+        achScreen.pack();
+        achScreen.setLocationRelativeTo(null);
+        achScreen.setResizable(false);
+        achScreen.setVisible(true);
+
+
     }
 
     class PlayActionListener implements ActionListener {
@@ -217,7 +281,7 @@ public class GameMenu extends JPanel {
                 JOptionPane.showMessageDialog(gameWindow.window, "Először hozz létre, vagy válassz profilt!",
                         "Nincs profil kiválasztva!", JOptionPane.ERROR_MESSAGE);
             } else {
-
+                addAchievmentsScreen();
             }
         }
     }
@@ -253,9 +317,16 @@ public class GameMenu extends JPanel {
         @Override
         public void actionPerformed(ActionEvent e) {
             if(listAblak.getSelectedValue() != null) {
+                playerList.clear();
+                for(int i = 0; i < playerModel.getSize(); i++) {
+                    PlayerData player = (PlayerData) playerModel.get(i);
+                    playerList.add(player);
+                }
                 PlayerData selectedPlayer = (PlayerData) listAblak.getSelectedValue();
                 gameWindow.player = selectedPlayer;
                 playerLabel.setText("Játékos: "+selectedPlayer.name);
+                gameWindow.window.setVisible(true);
+                profilFrame.dispose();
             }
         }
     }
@@ -282,6 +353,7 @@ public class GameMenu extends JPanel {
                 PlayerData player = (PlayerData) playerModel.get(i);
                 playerList.add(player);
             }
+            gameWindow.window.setVisible(true);
             profilFrame.dispose();
         }
     }

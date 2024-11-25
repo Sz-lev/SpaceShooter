@@ -1,14 +1,14 @@
 [
     {
-        "maxLevel": 0,
-        "timePlayed": 0,
-        "meteorsDestroyed": 0,
-        "highscore": 0,
-        "gamesPlayed": 0,
-        "name": "valaki1",
+        "maxLevel": 15,
+        "timePlayed": 265.16666666666663,
+        "meteorsDestroyed": 55,
+        "highscore": 4214,
+        "gamesPlayed": 2,
+        "name": "asd",
         "id": 0,
-        "enemyShipsDestroyed": 0,
-        "powerupsCollected": 0
+        "enemyShipsDestroyed": 131,
+        "powerupsCollected": 41
     },
     {
         "maxLevel": 0,
@@ -16,18 +16,7 @@
         "meteorsDestroyed": 0,
         "highscore": 0,
         "gamesPlayed": 0,
-        "name": "valaki2",
-        "id": 0,
-        "enemyShipsDestroyed": 0,
-        "powerupsCollected": 0
-    },
-    {
-        "maxLevel": 0,
-        "timePlayed": 0,
-        "meteorsDestroyed": 0,
-        "highscore": 0,
-        "gamesPlayed": 0,
-        "name": "valaki3",
+        "name": "wqe",
         "id": 0,
         "enemyShipsDestroyed": 0,
         "powerupsCollected": 0
