@@ -6,12 +6,17 @@ import java.util.HashMap;
 import java.util.List;
 import org.json.*;
 
-
-
+/**
+ * A játékos profilok osztálya.
+ */
 public class Profiles {
 
     public static ArrayList<PlayerData> playerList = new ArrayList<>();
 
+    /**
+     * Statikus függvény a profilok json-ből történő beolvasására.
+     * @param fileName A beolvasandó fájlhoz vezető cím.
+     */
     public static void readJSONFile(String fileName) {
         File file = new File(fileName);
         String fileData = new String();
@@ -37,7 +42,6 @@ public class Profiles {
 
                 PlayerData player = new PlayerData();
                 player.setName(jObject.getString("name"));
-                player.setId(jObject.getInt("id"));
                 player.addMeteorsDestroyed(jObject.getInt("meteorsDestroyed"));
                 player.addEnemyShipDestroyed(jObject.getInt("enemyShipsDestroyed"));
                 player.addTimePlayed(jObject.getDouble("timePlayed"));
@@ -55,6 +59,10 @@ public class Profiles {
     }
 
 
+    /**
+     * Statikus függvény a profilok json-be történő kiírására.
+     * @param fileName Az írandó fájlhoz vezető cím.
+     */
     public static void writeJSONFile(String fileName) {
         File file = new File(fileName);
         try {
@@ -62,7 +70,6 @@ public class Profiles {
             for(PlayerData player : playerList) {
                 JSONObject playerJson = new JSONObject();
                 playerJson.put("name", player.name);
-                playerJson.put("id", player.getId());
                 playerJson.put("meteorsDestroyed", player.meteorsDestroyed);
                 playerJson.put("enemyShipsDestroyed", player.enemyShipsDestroyed);
                 playerJson.put("timePlayed", player.timePlayed);
@@ -81,6 +88,11 @@ public class Profiles {
             e.printStackTrace();
         }
     }
+
+    /**
+     * A beolvasott profilok listáját adja vissza.
+     * @return A listában szereplő profilok.
+     */
     public static ArrayList<PlayerData> getPlayerList() {
         return playerList;
     }

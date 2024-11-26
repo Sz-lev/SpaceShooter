@@ -18,6 +18,9 @@ import playerdata.LeaderBoard;
 import playerdata.PlayerData;
 import playerdata.Result;
 
+/**
+ * A játék logikájának osztálya.
+ */
 public class GameLogic {
     private BackGround backGround;
     public PlayerSpaceShip player;
@@ -48,6 +51,9 @@ public class GameLogic {
         gameInit();
     }
 
+    /**
+     * Inícializálja a játékban található minden elem kezdeti értékét.
+     */
     public void gameInit() {
         time = 0;
         fpsCounter = 0;
@@ -61,13 +67,20 @@ public class GameLogic {
         backGround = new BackGround();
         laserList = new ArrayList<>();
         explosionList = new ArrayList<>();
-        player = new PlayerSpaceShip(gp, laserList, explosionList);
+        player = new PlayerSpaceShip(gp.getScreenDimension(), laserList, explosionList, gp.getGameKeyListener());
         enemyList = new ArrayList<>();
         meteorList = new ArrayList<>();
         powerUpList = new ArrayList<>();
         spaceFont = new Font("OCR A Extended", Font.BOLD, fontSize);
         System.out.println(spaceFont);
     }
+
+    /**
+     * Meghívja minden elemnek az update metódusát, ami a játékban fellelhető.
+     * Számolja az idő múlását és ezzel együtt növeli a pontszámot.
+     * Ellenőrzi, hogy a játék szünet, vagy játék állapotban van-e.
+     * Ha a játék állapota a szünet állapotban van akkor csak azt frissíti.
+     */
     public void gameUpdate() {
         if(!gp.getGameKeyListener().pause) {
             fpsCounter++;
@@ -90,13 +103,18 @@ public class GameLogic {
                 gameState = 0;
             }
         } else if (gamePauseMenu == null) {
-            gamePauseMenu = new GamePauseMenu(gp.getPanelDimension(), gp.getGameKeyListener(), gp.gameML);
+            gamePauseMenu = new GamePauseMenu(gp.getScreenDimension(), gp.getGameKeyListener(), gp.gameML);
             gameState = 1;
         }
         else
             gameState = gamePauseMenu.update();
     }
 
+    /**
+     * A következő szint nehézségének beállításáért felelős függvény.
+     * Minden páros szinten a meteorok intervallumát csökkenti amíg az 1 értékű nem lesz.
+     * Ezután, illetve minden páratlanadik szinten az ellenséges űrhajók számát csökkenti.
+     */
     public void nextLevel() {
         level++;
         if(level % 2 == 0 && nextMeteorInterval > 1)
@@ -104,6 +122,13 @@ public class GameLogic {
         else
             enemyCounter++;
     }
+
+    /**
+     * A játék végét ellenőrző függvény.
+     * Ha a játék úgy ér véget, hogy a játékos meghal, akkor menti a játék adatait a profilba és a ranglistába.
+     * A játék úgy is végetérhet, ha a játékos ki akar lépni.
+     * @return True - Ha a játék valamilyen okból végetér, egyébként False.
+     */
     public boolean end() {
         if(!player.isAlive()) {
             PlayerData plyr = gp.gameWindow.player;
@@ -120,6 +145,11 @@ public class GameLogic {
         return (gameState == 2 || !player.isAlive());
     }
 
+    /**
+     * Minden elemnek meghívja a megjelenítésért felelős függvényét.
+     * Ha a játék a szünet állapotban van, akkor meghívja a szünet megjelenítéséért felelős függvényt.
+     * @param g A megjelenítést végző Graphics2D objektum.
+     */
     public void draw(Graphics2D g) {
 
             backGround.draw(g);
@@ -133,11 +163,22 @@ public class GameLogic {
             drawPowerUps(g);
         if(gamePauseMenu != null)
             gamePauseMenu.draw(g);
+        else {
+
+        }
     }
 
+    /**
+     * A játékhoz hozzáad egy új powerupot.
+     */
     private void addPowerUp() {
         powerUpList.add(new PowerUp(gp.getScreenDimension()));
     }
+
+    /**
+     * A powerupok listája alapján frissíti az összes powerupot.
+     * Ha egy powerup a határain kívűlre került, vagy a játékos felszedte, akkor eltávolítja a listából.
+     */
     private void updatePowerUps() {
 
         Iterator<PowerUp> powerUpIterator = powerUpList.iterator();
@@ -149,12 +190,23 @@ public class GameLogic {
         }
     }
 
+    /**
+     * A powerup lista alapján meghívja az összes powerup draw függvényét
+     * @param g
+     */
     private void drawPowerUps(Graphics2D g) {
         for(PowerUp powerup : powerUpList) {
             powerup.draw(g);
         }
     }
 
+    /**
+     * Az ellenséges űrhajókat a listájuk alapján bejárja és frissíti őket.
+     * Ha elfogyott az összes ellenséges űrhajó, akkor a szintnek megfelelően létrehozza a következőket, és növeli a szint értékét.
+     * Ha egy ellenséges űrhajó felrobbant állapotba kerül, akkor eltávolítja a listából, és növeli a pontszám értékét.
+     * Minden ötödik elpusztult ellenséges űrhaó után létrehoz egy powerupot.
+     * Számlálja az elpusztított ellenséges űrhajók számát is.
+     */
     private void updateEnemies() {
         if(enemyList.isEmpty()) {
             nextLevel();
@@ -178,11 +230,20 @@ public class GameLogic {
         }
     }
 
+    /**
+     * Az ellenséges űrhajók listája alapján meghívja azok draw függvényét.
+     * @param g A rajzolást végző Graphics2D objektum.
+     */
     private void drawEnemies(Graphics2D g) {
         for(EnemySpaceShip enemy : enemyList) {
             enemy.draw(g);
         }
     }
+
+    /**
+     * A lézerek listája alapján frissíti azokat.
+     * Ha egy lézer a határain kívűlre került, akkor eltávolítja a listából.
+     */
     private void updateLasers() {
         Iterator<Laser> laserIterator = laserList.iterator();
         while(laserIterator.hasNext()) {
@@ -194,17 +255,28 @@ public class GameLogic {
         }
     }
 
+    /**
+     * A lézerek listája alapján meghívja azok draw függvényét.
+     * @param g A rajzolást végző Graphics2D objektum.
+     */
     private void drawLasers(Graphics2D g) {
         for(Laser laser : laserList) {
             laser.draw(g);
         }
     }
 
+    /**
+     * Egy meteor létrehozó függvény. A létrehozás után hozzáadja a meteorok listájához.
+     */
     private void meteorInvoke() {
         Meteor newMeteor = new Meteor(gp.getScreenDimension(), explosionList);
         meteorList.add(newMeteor);
     }
 
+    /**
+     * A meteorok listája alapján meghívja azok update függvényét.
+     * Ha egy meteor a határain kívűlre került, vagy elpusztul, akkor eltávolítja a listából.
+     */
     private void updateMeteors() {
         if(System.currentTimeMillis()/1000.0 - lastMeteorTime > nextMeteorInterval) {
             lastMeteorTime = System.currentTimeMillis()/1000.0;
@@ -220,12 +292,19 @@ public class GameLogic {
         }
     }
 
+    /**
+     * A meteorok listája alapján meghívja azok draw függvényét.
+     * @param g A rajzolást végző Graphics2D objektum.
+     */
     private void drawMeteors(Graphics2D g) {
         for(Meteor meteor : meteorList) {
             meteor.draw(g);
         }
     }
 
+    /**
+     * A robbanások listája alapján meghívja a robbanások update függvényét.
+     */
     private void updateExplosions() {
         Iterator<Explosion> explosionIterator = explosionList.iterator();
         while(explosionIterator.hasNext()) {
@@ -235,12 +314,25 @@ public class GameLogic {
                     explosionIterator.remove();
         }
     }
+
+    /**
+     * A robbanások listája alapján meghívja a robbanások draw függvényét.
+     * @param g A rajzolást végző Graphics2D objektum.
+     */
     private void drawExplosions(Graphics2D g) {
         for(Explosion exp : explosionList) {
             exp.draw(g);
         }
     }
 
+    /**
+     * Az ütközést ellenőrző függvény.
+     * Ellenőrzi, hogy egy lézer ütközött-e meteorral, ellenséggel, játékossal,
+     * egy meteor ütközött-e játékossal, és hogy egy játékos ütközött-e ellenséggel vagy poweruppal.
+     * Ütközés esetén az ütközésben résztvevő entitások damage/hitEntity függvényét meghívja.
+     * Meteor elpusztítás esetén növeli a pontszámot és számolja az elpusztított űrhajók számát.
+     * Powerup esetén növeli a számlálóját.
+     */
     private void checkCollision(){
         Ellipse2D.Double playerBounds = player.getSpaceShipBounds();
         // laser találat ellenőrzése
@@ -280,6 +372,14 @@ public class GameLogic {
             }
         }
 
+        for(EnemySpaceShip enemy : enemyList) {
+            Rectangle enemyBounds = enemy.getSpaceShipBounds().getBounds();
+            if(player.isHitable() && enemyBounds.intersects(playerBounds.getBounds2D())) {
+                enemy.damageShip();
+                player.damage();
+            }
+        }
+
         Iterator<PowerUp> powerUpIterator = powerUpList.iterator();
         while(powerUpIterator.hasNext()) {
             PowerUp powerup = powerUpIterator.next();
@@ -293,6 +393,10 @@ public class GameLogic {
 
     }
 
+    /**
+     * A játék adatainak megjelenítéséért felelős függvény.
+     * @param g A rajzolást végző Graphics2D objektum.
+     */
     private void drawPoints(Graphics2D g) {
         g.setFont(spaceFont);
         g.setColor(Color.WHITE);

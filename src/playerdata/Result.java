@@ -1,5 +1,8 @@
 package playerdata;
 
+/**
+ * Az eredmény osztálya
+ */
 public class Result implements Comparable<Result> {
     public String name;
     public int point;
@@ -10,6 +13,13 @@ public class Result implements Comparable<Result> {
         this.point = point;
         this.time = time;
     }
+
+    /**
+     * Összehasonlító függvény. A nagyobb pontszám kisebb idővel kerül előrébb.
+     * @param res2 az összehasonlítandó objektum
+     * @return < 0 - Ha az objektumnak nagyobb a pontja, vagy egyenlőség esetén kisebb az ideje. 0 - Ha teljesen megegyeznek.
+     * > 0 - egyébként.
+     */
     @Override
     public int compareTo(Result res2) {
         if(point == res2.point) {
@@ -22,9 +32,5 @@ public class Result implements Comparable<Result> {
         } else
             return res2.point - point;
     }
-
-//    @Override
-//    public String toString() {
-//        return "Name: "+name+", point: "+point+", time: "+time+" s";
-//    }
+    
 }

@@ -8,8 +8,14 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * A nagy robbanás osztálya.
+ */
 public class BigExplosion extends Explosion{
 
+    /**
+     * Statikus listája a képeknek.
+     */
     protected static List<BufferedImage> staticImageList;
     static {
         staticImageList = new ArrayList<>();
@@ -32,6 +38,12 @@ public class BigExplosion extends Explosion{
         }
     }
     private BigExplosion() {}
+
+    /**
+     * Konstrukor
+     *
+     * @param coords A maximális x és y értékét tartlmazó változó.
+     */
     public BigExplosion(Dimension coords) {
         entityPosX = coords.width;
         entityPosY = coords.height;
@@ -40,6 +52,9 @@ public class BigExplosion extends Explosion{
         explosionInit();
     }
 
+    /**
+     * A nagy meteor értékeit inícializáló függvény.
+     */
     protected void explosionInit() {
         imageList = staticImageList;
         animationTime = 0.05;

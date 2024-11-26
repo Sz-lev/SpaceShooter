@@ -3,25 +3,19 @@ package gamewindow;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
+/**
+ * A billentyűzet változásit figyelő osztály.
+ */
 public class GameKeyListener implements KeyListener {
 
     public boolean up, left, down, right, space, enter, pause;
-    public String word;
-
-    public GameKeyListener() {
-        word = new String();
-    }
-
-    public GameKeyListener(String string) {
-        word = string;
-    }
 
     @Override
-    public void keyTyped(KeyEvent e) {
-//        word += e.getKeyChar();
-//        System.out.println(word);
-    }
-
+    public void keyTyped(KeyEvent e) {}
+    /**
+     * A játékban használt gombok megnyomása esetén True-ra állítja a hozzá tartozó változót.
+     * @param e the event to be processed
+     */
     @Override
     public void keyPressed(KeyEvent e) {
         int keyCode = e.getKeyCode();
@@ -58,6 +52,11 @@ public class GameKeyListener implements KeyListener {
                 break;
         }
     }
+
+    /**
+     * A játékban használt gombok esetén False-ra állítja a megfelelőnek az értékét a gomb elengedésekor.
+     * @param e the event to be processed
+     */
 
     @Override
     public void keyReleased(KeyEvent e) {

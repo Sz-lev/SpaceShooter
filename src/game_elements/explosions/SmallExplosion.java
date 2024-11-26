@@ -8,7 +8,11 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * A kis robbanás osztálya.
+ */
 public class SmallExplosion extends Explosion{
+
     protected static List<BufferedImage> staticImageList;
     static {
         staticImageList = new ArrayList<>();
@@ -24,6 +28,13 @@ public class SmallExplosion extends Explosion{
         }
     }
     private SmallExplosion() {}
+
+    /**
+     * Konstruktor:
+     * Menti a robbanó entitás pozícióját és beállítja a saját pozícióját.
+     *
+     * @param coords A robbanó entitás koordinátája.
+     */
     public SmallExplosion(Dimension coords) {
         entityPosX = coords.width;
         entityPosY = coords.height;

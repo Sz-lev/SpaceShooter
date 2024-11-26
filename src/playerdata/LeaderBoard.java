@@ -5,6 +5,9 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * A ranglista tábla model osztálya.
+ */
 public class LeaderBoard extends AbstractTableModel {
 
     public static List<Result> resultList = new ArrayList<>();
@@ -16,22 +19,32 @@ public class LeaderBoard extends AbstractTableModel {
             "Pont",
             "Idő"
     };
-    public LeaderBoard() {
-//        resultList = new ArrayList<>();
-//        if(!readLeaderboardFile("./data/leaderboard.txt"))
-//            System.out.println("Sikertelen fájl beolvasás");
-    }
 
+    /**
+     * Megadja a sorok számát.
+     * @return A táblázat sorainak a száma.
+     */
     @Override
     public int getRowCount() {
         return resultList.size();
     }
 
+    /**
+     * Megadja a táblázat oszlopainak a számát.
+     * @return Az oszlopok száma 4.
+     */
     @Override
     public int getColumnCount() {
         return 4;
     }
 
+
+    /**
+     * Megadja egy sor és oszlop indexnek megfelelően az oda tartozó értéket.
+     * @param rowIndex        A sor indexe, aminek a tartalmát lekérdezik.
+     * @param columnIndex     Az oszlop indexe, aminek a tartalmát lekérdezik.
+     * @return A sor és oszlopindexnek megfelelő cella érték.
+     */
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
         switch (columnIndex) {
@@ -42,6 +55,12 @@ public class LeaderBoard extends AbstractTableModel {
         }
     }
 
+    /**
+     * Egy double szám bizonyos tizedes helyiértékre kerekítése.
+     * @param number A kerekítendő szám.
+     * @param places A tizedes helyiérték.
+     * @return A kerekített double szám.
+     */
     public Double roundDouble(Double number, int places) {
         if(places > 0) {
             double multiplyBy =  Math.pow(10.0, places);
@@ -51,11 +70,21 @@ public class LeaderBoard extends AbstractTableModel {
         return null;
     }
 
+    /**
+     * Beállítja a táblázat oszlopainak nevét.
+     * @param index  the column being queried
+     * @return Az indexnek megfelelő oszlopnév.
+     */
     @Override
     public String getColumnName(int index) {
         return columnNames[index];
     }
 
+    /**
+     * Az oszlopok típusát határozza meg.
+     * @param index  A keresett oszlop értéke.
+     * @return A keresett oszlop típusa.
+     */
     @Override
     public Class<?> getColumnClass(int index){
         switch (index){
@@ -67,9 +96,13 @@ public class LeaderBoard extends AbstractTableModel {
         }
     }
 
-
-
-
+    /**
+     * Statikus függvény a ranglista txt-ből történő beolvasására.
+     * A beolvasás után rendezi a listát, és ha 10-nél több elem lenne benne,
+     * akkor törli a 10.-től kezdve az elemeket.
+     * @param fileName A beolvasandó fájlhoz vezető cím.
+     * @return True - Ha sikeresen beolvasta a fájlt, False egyébként.
+     */
     public static boolean readLeaderboardFile(String fileName)  {
         File file = new File(fileName);
         try {
@@ -100,6 +133,11 @@ public class LeaderBoard extends AbstractTableModel {
         return true;
     }
 
+    /**
+     * Statikus függvény a ranglista txt-be olvasására.
+     * @param fileName Az írandó txt-hez vezető cím.
+     * @return True - Ha sikeres volt az írás, egyébként False.
+     */
     public static boolean writeLeaderboardToFile(String fileName) {
         File file = new File(fileName);
 
@@ -120,6 +158,11 @@ public class LeaderBoard extends AbstractTableModel {
     }
 
 
+    /**
+     * Hozzáad egy új elemet a ranglistához, majd rendezi azt.
+     * Ha több mint 10 elem lenne benne, akkor az utolsó törli.
+     * @param res A hozzáadandó Result objektum.
+     */
     public static void addResult(Result res) {
         resultList.add(res);
         resultList.sort(Result::compareTo);

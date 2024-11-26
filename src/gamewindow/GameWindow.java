@@ -10,6 +10,9 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+/**
+ * A játék ablakának osztálya
+ */
 public class GameWindow {
 
     public final int WIDTH = 1080;
@@ -21,14 +24,22 @@ public class GameWindow {
 
     private int gameState;
 
+    /**
+     * Konstrukor ami meghívja az inícializáló függvényt.
+     */
     public  GameWindow() {
         initWindow();
     }
 
+    /**
+     * Létrehozza az ablakot és beállítja a kezdeti paramétereit.
+     * Az ablak létrehozása után beolvassa a játék progilokat és ranglistát,
+     * majd meghívja a menüt létrehozó függvényt.
+     */
     public void initWindow() {
         window = new JFrame();
         window.setTitle("SpaceShooter");
-        window.setResizable(true);
+        window.setResizable(false);
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         window.setFocusable(true);
         Profiles.readJSONFile("./data/profiles.json");
@@ -36,6 +47,11 @@ public class GameWindow {
         addMenu();
     }
 
+    /**
+     * A Menü paneljét létrehozó függvény.
+     * Ha volt játékpanel létrehozva, akkor megszűnteti azt.
+     * Beállítja a menüpanelhez az ablak paramétereit.
+     */
     public void addMenu() {
         if(gamePanel != null) {
             window.remove(gamePanel);
@@ -50,6 +66,11 @@ public class GameWindow {
         window.setVisible(true);
     }
 
+    /**
+     * A játék paneljét létrehozó függvény.
+     * Ha volt menüpanel létrehozva, akkor megszűnteti azt.
+     * Beállítja a jatékpanelhez az ablak paramétereit.
+     */
     public void addGamePanel() {
         if(menu != null) {
             window.remove(menu);
@@ -59,22 +80,11 @@ public class GameWindow {
         window.add(gamePanel);
         window.setSize(WIDTH, HEIGTH);
         window.setLocationRelativeTo(null);
-        window.getContentPane().setPreferredSize(gamePanel.getPanelDimension());
+        window.getContentPane().setPreferredSize(gamePanel.getScreenDimension());
         window.pack();
         window.setVisible(true);
         gamePanel.requestFocusInWindow();
     }
-
-
-    class PlayActionListener implements ActionListener {
-
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            addGamePanel();
-        }
-    }
-
-
 }
 
 

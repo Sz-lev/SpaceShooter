@@ -6,6 +6,9 @@ import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
 import java.util.HashMap;
 
+/**
+ * A kitüntetések táblázat model osztálya.
+ */
 public class PlayerDataTable extends AbstractTableModel {
 
     public HashMap<String, PlayerData.Rank> rankList;
@@ -16,6 +19,11 @@ public class PlayerDataTable extends AbstractTableModel {
         this.rankList = player.rankList;
     }
 
+    /**
+     * Beállítja a táblázat oszlopainak nevét.
+     * @param index  the column being queried
+     * @return Az indexnek megfelelő oszlopnév.
+     */
     @Override
     public String getColumnName(int index) {
         if(index == 0)
@@ -26,16 +34,30 @@ public class PlayerDataTable extends AbstractTableModel {
             return "Rank";
     }
 
+    /**
+     * Megadja a sorok számát.
+     * @return A táblázat sorainak a száma.
+     */
     @Override
     public int getRowCount() {
         return rankList.size();
     }
 
+    /**
+     * Megadja a táblázat oszlopainak a számát.
+     * @return Az oszlopok száma 3.
+     */
     @Override
     public int getColumnCount() {
         return 3;
     }
 
+    /**
+     * Megadja egy sor és oszlop indexnek megfelelően az oda tartozó értéket.
+     * @param rowIndex        A sor indexe, aminek a tartalmát lekérdezik.
+     * @param columnIndex     Az oszlop indexe, aminek a tartalmát lekérdezik.
+     * @return A sor és oszlopindexnek megfelelő cella érték.
+     */
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
         if(columnIndex == 0) {
@@ -93,6 +115,11 @@ public class PlayerDataTable extends AbstractTableModel {
 
     }
 
+    /**
+     * Az oszlopok típusát határozza meg.
+     * @param index  A keresett oszlop értéke.
+     * @return A keresett oszlop típusa.
+     */
     @Override
     public Class<?> getColumnClass(int index){
         switch (index){

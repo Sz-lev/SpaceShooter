@@ -8,7 +8,11 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Az életjelzősáv osztálya.
+ */
 public class HealthBar {
+
 
     private static BufferedImage maxHealth, yellowHealth, redHealth, blankHealth;
     private static List<BufferedImage> imageList;
@@ -48,22 +52,39 @@ public class HealthBar {
         posY = coords.height;
     }
 
+    /**
+     * Az életjelző koordintáját frissítő függvény.
+     * @param coords Az új koordintáta értéke.
+     */
     public void update(Dimension coords) {
         posX = coords.width-sizeX/2;
         posY = coords.height-sizeY-10;
     }
 
+    /**
+     * Az életjelző rajzolásáért felelős függvény.
+     * @param g A rajzolást végző Graphics2D objektum.
+     */
     public void draw(Graphics2D g) {
         g.drawImage(image, posX, posY, sizeX, sizeY, null);
     }
 
+    /**
+     * A sérülést jelző függvény. Növeli az osztály sérülés számlálóját, ami a megjelenített képért felel.
+     * Ha a sérülés mértéke elérte az határt, akkor nem növeli tovább.
+     */
     public void damage() {
-        healthLostCounter++;
-        if(healthLostCounter < imageList.size())
+        if(healthLostCounter < imageList.size()-1) {
+            healthLostCounter++;
             image = imageList.get(healthLostCounter);
+        }
     }
 
-
-
-
+    /**
+     * A sérülés számlálóját visszaadó függvény.
+     * @return A sérülés mértéke.
+     */
+    public int getHealthLostCounter() {
+        return healthLostCounter;
+    }
 }

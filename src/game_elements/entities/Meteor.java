@@ -12,6 +12,9 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
+/**
+ * Meteort megvalósító osztály
+ */
 public class Meteor extends GameEntity {
 
 
@@ -34,8 +37,14 @@ public class Meteor extends GameEntity {
     private List<Explosion> explosionList;
     private BufferedImage image;
     private int endPosX;
-    private double doublePosX, doublePosY, speedX, speedY;
+    private double speedX, speedY;
 
+    /**
+     * Konstruktor
+     *
+     * @param coords        A maximális koordináta értéke.
+     * @param explosionList A robbanások listája.
+     */
     public Meteor(Dimension coords, List<Explosion> explosionList) {
         maxCoordinateOfX = coords.width;
         maxCoordinateOfY = coords.height;
@@ -43,6 +52,9 @@ public class Meteor extends GameEntity {
         meteorInit();
     }
 
+    /**
+     * Az objektumok értékeit inícializáló függvény.
+     */
     public void meteorInit() {
         meteorRandomizer();
         yCoordinate = -size_y;
@@ -51,22 +63,32 @@ public class Meteor extends GameEntity {
     }
 
 
-
+    /**
+     * Frissíti a meteor értékeit az idő múlásával.
+     * A jelenlegi x és y értékeket a sebességnek megfelelően változtatja.
+     * Ellenőrzi, hogy a meteor a határokon belül tartozkodik-e. Ha nem, úgy az outOfBounds értékét True-ra állítja.
+     */
     public void update() {
-        doublePosX += speedX;
-        xCoordinate = (int) doublePosX;
-        doublePosY += speedY;
-        yCoordinate = (int) doublePosY;
+        xCoordinate += speedX;
+        yCoordinate += speedY;
 
         if(yCoordinate > maxCoordinateOfY)
             outOfBounds = true;
     }
 
+    /**
+     * A megjelenítésért felelős függvény.
+     * @param g A megjelenítést végző Graphics2D objektum.
+     */
     @Override
     public void draw(Graphics2D g) {
-        g.drawImage(image, xCoordinate, yCoordinate, null);
+        g.drawImage(image, (int) xCoordinate, (int) yCoordinate, null);
     }
 
+    /**
+     * A meteor randomizált megjelenéséért felelős függvény. Véletlenszerűen választ a meteor típusok közül, állítja be az x értékét, választja ki a végpontot és a sebességet.
+     * A sebesség értéke 4-9 értéket vehetnek fel.
+     */
     private void meteorRandomizer() {
         meteorSize = (int) (3*Math.random());
         switch(meteorSize) {
@@ -86,13 +108,15 @@ public class Meteor extends GameEntity {
         size_x = image.getWidth();
         size_y = image.getHeight();
 
-        doublePosX =  (maxCoordinateOfX - size_x)*Math.random();
-        xCoordinate = (int) doublePosX;
+        xCoordinate =  (maxCoordinateOfX - size_x)*Math.random();
         speed = (int) (4 + 6*Math.random());
         endPosX =(int) ((maxCoordinateOfX - size_x)*Math.random());
-        doublePosY = -size_y;
+        yCoordinate = -size_y;
     }
 
+    /**
+     * Kiszámolja a jelenlegi pont és a végpont közötti úthoz és a sebességhez tartozó x és y komponensű sebességet.
+     */
     private void calculateRoute() {
         double distanceX = endPosX - xCoordinate;
         double distanceY = maxCoordinateOfY - yCoordinate;
@@ -106,17 +130,31 @@ public class Meteor extends GameEntity {
         speedY =Math.abs(speedY);
     }
 
+    /**
+     * A határokon kívüliség jelzésére szolgáló függvény.
+     *
+     * @return True - Ha a kijelző kívűlre került, egyébként False.
+     */
     public boolean isOutOfBounds() {
         return outOfBounds;
     }
 
+    /**
+     * A meteor határait visszaadó függvény.
+     * Egy ellpiszis formát von a meteor köré, ami a határait reprezentálja.
+     * @return Az ellipszis alakot adja.
+     */
     public Ellipse2D.Double getMeteorBounds() {
         return new Ellipse2D.Double(xCoordinate, yCoordinate, size_x, size_y);
     }
 
+    /**
+     * A robbanás létrehozásáért és a robbanás listáho adásért felelős függvény.
+     * Az outOfBounds értékét True-ra állítja, amivel jelzi, hogy már nincs szükség a meteorra.
+     */
     public void explode() {
-        int explosionPosX = xCoordinate+size_x/2;
-        int explosionPosY = yCoordinate+size_y/2;
+        int explosionPosX = (int) xCoordinate+size_x/2;
+        int explosionPosY = (int) yCoordinate+size_y/2;
         explosionList.add(new BigExplosion(new Dimension(explosionPosX, explosionPosY)));
         outOfBounds = true;
     }

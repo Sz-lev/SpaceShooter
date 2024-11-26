@@ -14,9 +14,12 @@ import java.io.IOException;
 import java.util.*;
 import java.util.List;
 
+/**
+ * A játékos űrhajójának osztálya.
+ */
 public class PlayerSpaceShip extends SpaceShip{
 
-    private GamePanel gp;
+    private GameKeyListener gameKL;
     private BufferedImage shipImage;
     private BufferedImage healthImage;
     private int healthSizeX, healthSizeY;
@@ -31,18 +34,29 @@ public class PlayerSpaceShip extends SpaceShip{
     private double fasterRechargeTime;
     private boolean hit;
 
-    public PlayerSpaceShip(GamePanel gamepanel, List<Laser> laserList, List<Explosion> explosionList) {
-        gp = gamepanel;
+    /**
+     * A játékos űrhajójának konstruktora. Meghívja az inicializáló függvényt.
+     *
+     * @param maxCoords     A maximum x és y értékeket jelző koordináta.
+     * @param laserList     A lézerek listája.
+     * @param explosionList A robbanások listája.
+     * @param gkl           A billentyűzet változásait figyelő objektum.
+     */
+    public PlayerSpaceShip(Dimension maxCoords, List<Laser> laserList, List<Explosion> explosionList, GameKeyListener gkl) {
+        maxCoordinateOfX = maxCoords.width;
+        maxCoordinateOfY = maxCoords.height;
         this.laserList = laserList;
         this.explosionList = explosionList;
+        gameKL = gkl;
         playerInit();
     }
 
+    /**
+     * A játékos űrhajójának értékeit inícializáló függvény.
+     */
     public void playerInit() {
         size_x = 99;
         size_y = 75;
-        maxCoordinateOfX = gp.getScreenDimension().width;
-        maxCoordinateOfY = gp.getScreenDimension().height;
         xCoordinate = (maxCoordinateOfX-size_x)/2;
         yCoordinate = (maxCoordinateOfY - size_y)/2;
         speed = 8;
@@ -56,9 +70,13 @@ public class PlayerSpaceShip extends SpaceShip{
     }
 
 
-
+    /**
+     * Ellenőrzi a billentyűzet inputot és annak függvényében mozgatja az űrhajót, vagy lő a lézerrel, ha az nincs újratöltési fázisban.
+     * Az újratöltés csökkentésért felelős power hatásának határidejét is ellenőrzi. Ha letelt az idő, akkor visszaállítja a kezdő értéket.
+     * Frissíti az űrhajó pajzsát, ha az létezik.
+     *
+     */
     public void update() {
-        GameKeyListener gameKL = gp.getGameKeyListener();
         if(gameKL.up && !gameKL.down) {
             moveY(false);
         } else if(gameKL.down && !gameKL.up) {
@@ -77,7 +95,14 @@ public class PlayerSpaceShip extends SpaceShip{
             laserRechargeTime = 0.5;
         if(shield != null)
             shield.update();
+
     }
+
+    /**
+     * A vízszintes síkon mozgásért felelős függvény. Ha túllépné valamelyik határt a mozgás, akkor a méretnek megfelelő határt állítja be a jelenlegi x értéknek.
+     *
+     * @param rigth Ha True, akkor jobbra mozgás történik, ellenkező esetben balra mozgás.
+     */
     public void moveX(boolean rigth) {
         if(rigth && xCoordinate >= maxCoordinateOfX-size_x)
             xCoordinate = maxCoordinateOfX-size_x;
@@ -90,6 +115,12 @@ public class PlayerSpaceShip extends SpaceShip{
         }
 
     }
+
+    /**
+     * A vízszintes síkon mozgásért felelős függvény. Ha túllépné valamelyik határt a mozgás, akkor a méretnek megfelelő határt állítja be a jelenlegi y értéknek.
+     *
+     * @param down Ha True, akkor lefele mozgás történik, ellenkező esetben felfele mozgás.
+     */
     public void moveY(boolean down) {
         if(down && yCoordinate >=maxCoordinateOfY-size_y)
             yCoordinate = maxCoordinateOfY-size_y;
@@ -102,14 +133,19 @@ public class PlayerSpaceShip extends SpaceShip{
         }
     }
 
+    /**
+     * Az űrhajó és az életek számának megjelenítéséért felelős függvény. Találat esetén a villogó megjelenését végzi.
+     * Ha az űrhajó rendelkezik pajzzsal, akkor meghívja annak a megjelenítésért felelős függvényét.
+     *
+     * @param g A rajzolást végző Graphics2D objektum.
+     */
     public void draw(Graphics2D g) {
 
         if(!hit)
-            g.drawImage(shipImage, xCoordinate, yCoordinate, size_x, size_y, null);
+            g.drawImage(shipImage, (int) xCoordinate, (int) yCoordinate, size_x, size_y, null);
         else if(blinkAnimation() % 2 == 0) {
-            g.drawImage(shipImage, xCoordinate, yCoordinate, size_x, size_y, null);
+            g.drawImage(shipImage, (int) xCoordinate, (int) yCoordinate, size_x, size_y, null);
         }
-
 
         for(int i = 0; i < health; i++) {
             g.drawImage(healthImage, 15+i*(healthSizeX+10), 42, healthSizeX, healthSizeY, null);
@@ -118,9 +154,11 @@ public class PlayerSpaceShip extends SpaceShip{
         if(shield != null) {
            shield.draw(g);
         }
-
     }
 
+    /**
+     * Az űrhajó és az élet képének beolvasásáért felelős függvény.
+     */
     public void getImages() {
 
         try {
@@ -137,6 +175,11 @@ public class PlayerSpaceShip extends SpaceShip{
         }
     }
 
+    /**
+     * A lézer létrehozásáért/lövéséért felelős függvény. Ellenőrzi, hogy van-e extra lézer powerup érvényben,
+     * ha igen, akkor annak megfelelően hozza létre a lézereket.
+     *
+     */
     private void shootLaser() {
         if(extraLaserTime > 0) {
             double currentTime = System.currentTimeMillis()/1000.0;
@@ -148,31 +191,42 @@ public class PlayerSpaceShip extends SpaceShip{
                 laserList.add(extraLaser2);
             } else
                 extraLaserTime = -1;
-
         }
         Laser laser = new Laser(this, laserSpeed, explosionList, 0);
         laserList.add(laser);
         lastLaserShoot = System.currentTimeMillis();
-
     }
 
+    /**
+     * A lézer újratöltési idejének ellenőrzését végzi.
+     * @return True - Ha újratöltési fázisban van, False egyébként.
+     */
     public boolean isRecharging() {
         return (System.currentTimeMillis() - lastLaserShoot) / 1000 < laserRechargeTime;
     }
 
+    /**
+     * A sérülés okozta módosításokat végző függvény. A hit változó értéke jelzi, hogy még halhatatlan állappotban van-e a hajó.
+     * Ha a pajzs sérül, akkor a hajó nem kerül halhatatlan állapotba. A hajó sérülése esetén a sérülés időpontját menti.
+     */
     public void damage() {
         double currentTime = System.currentTimeMillis()/1000.0;
-        if(hit == false || currentTime - lastHitTime > invincibleTime) {
+        if(hit == false) {
             if(shield != null)
                 shield.damage();
             else {
                 health--;
                 lastHitTime = currentTime;
+                hit = true;
             }
-            hit = true;
         }
     }
 
+    /**
+     * A hajó sérülése utáni villogó megjelenítés animációjáanak időzítéséért felel. Ha letelt a halhatatlansági idő, akkor a hit értékét False-ra állítja.
+     *
+     * @return Az előző találat óta eltelt idő 10-szerese.
+     */
     public int blinkAnimation() {
         double currentTime = System.currentTimeMillis()/1000.0;
         double diff = currentTime - lastHitTime;
@@ -181,10 +235,20 @@ public class PlayerSpaceShip extends SpaceShip{
         return (int) ((currentTime-lastHitTime)*10);
     }
 
+    /**
+     * A hajó élet állapotát visszaadó függvény.
+     *
+     * @return True - Ha a hajó életben van, egyébként False.
+     */
     public boolean isAlive() {
         return health > 0;
     }
 
+    /**
+     * A powerup hatását létrehozó függvény
+     *
+     * @param powerupType A powerup típúsa. 0 - extra lézer. 1 - plusz élet. 2 - pajzs. 3 - rövidebb újratöltési idő.
+     */
     public void collectPowerUp(int powerupType) {
         switch (powerupType) {
             case 0:
@@ -203,10 +267,36 @@ public class PlayerSpaceShip extends SpaceShip{
         }
     }
 
+    /**
+     * A pajzs állapotát jelző függvény.
+     *
+     * @return True - Ha van működő pajzs, egyébként False.
+     */
+    public boolean hasShield() {
+        if(shield != null)
+            return true;
+        return false;
+    }
+
+    /**
+     * A pajzs elvesztéséért felelős függvény.
+     */
     public void loseShield() {
         shield = null;
     }
 
+    /**
+     * A játékos űrhajójának sérülés lehetőségének jelzője.
+     * @return True - Ha tudja találat érni a hajó, egyébként False.
+     */
+    public boolean isHitable() {
+        return !hit;
+    }
+
+    /**
+     * Az űrhajó határait visszaadó függvény. Felülírja az ősosztályban található fóggvényt. Ha van pajzs, akkor annak értékét is beleszámolja.
+     * @return Ellipszis alakot ad vissza, ami részben illeszkedik a hajó határaira.
+     */
     @Override
     public Ellipse2D.Double getSpaceShipBounds() {
         if(shield != null)

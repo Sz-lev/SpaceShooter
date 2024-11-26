@@ -11,6 +11,9 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
+/**
+ * A lézer osztálya.
+ */
 public class Laser extends GameEntity {
 
     private SpaceShip spaceShip;
@@ -33,6 +36,14 @@ public class Laser extends GameEntity {
     }
 
 
+    /**
+     * Beállítja a tulajdonos űrhajót magának, a sebességét, a robbanás listát, és hogy melyik oldalról lövi ki a hajó.
+     * Az űrhajótól megkapja a max x és y érétéket. Meghívja az inícializáló függvényt.
+     * @param spaceShip A tulajdonos űrhajó.
+     * @param speed A sebesség értéke.
+     * @param explosionList A robbanások listája.
+     * @param side A kilövés oldala. 0 - Közép, 1 - Bal, 2 - jobb.
+     */
     public Laser(SpaceShip spaceShip, int speed, List<Explosion> explosionList, int side) {
         maxCoordinateOfX = spaceShip.maxCoordinateOfX;
         maxCoordinateOfY = spaceShip.maxCoordinateOfY;
@@ -43,6 +54,11 @@ public class Laser extends GameEntity {
         laserInit();
     }
 
+    /**
+     * Beállítja a méretét a kép méretének megfelelően.
+     * A kilövés oldalának megfelelően és a tulajdonos űrhajó koordinátái alapján kiszámolja a saját koordinátáit.
+     * A sebességnek megfelelően kiválasztja, hogy a rendes vagy a megfordított képet használja.
+     */
     public void laserInit() {
         size_y = laserImage.getHeight();
         size_x = laserImage.getWidth();
@@ -67,6 +83,10 @@ public class Laser extends GameEntity {
             image = laserImage;
     }
 
+    /**
+     * A lézer y-tengelyű mozgását frissíti.
+     * Meghívja a határokat ellenőrző függvényt.
+     */
     public void update() {
         if(!isOutOfBounds) {
             yCoordinate += speed;
@@ -74,10 +94,19 @@ public class Laser extends GameEntity {
         }
     }
 
+    /**
+     * A lézer megjelenítéséért felelős függvény.
+     * @param g A megjelenítést végző Graphics2D objektum.
+     */
     public void draw(Graphics2D g) {
-        g.drawImage(image, xCoordinate, yCoordinate, null);
+        g.drawImage(image, (int) xCoordinate, (int) yCoordinate, null);
     }
 
+    /**
+     * A pozíciót ellenőrző függvény.
+     * Ellenőrzi, hogy a sebességnek és a jelenlegi pozíciónak megfelelően átlépte-e már a határt.
+     * Ha átlépte, akkor az outOfBounds értékét True-ra állítja.
+     */
     private void checkPosition() {
         if(speed > 0 && yCoordinate > maxCoordinateOfY) {
             isOutOfBounds = true;
@@ -86,21 +115,34 @@ public class Laser extends GameEntity {
         }
     }
 
+    /**
+     * A lézer körvonal határait adja vissza egy téglalap alakzatként.
+     * @return A lézer köré rajzolt téglalap.
+     */
     public Rectangle getLaserBounds() {
-        return new Rectangle(xCoordinate, yCoordinate, size_x, size_y);
+        return new Rectangle((int) xCoordinate, (int) yCoordinate, size_x, size_y);
     }
 
+    /**
+     * Visszaadja, hogy a lézer a játékoshoz tartozik-e.
+     * @return True - Ha a lézer a játékoshoz tartozik, egyébként False.
+     */
     public boolean isPlayerLaser() {
         return speed < 0;
     }
 
+    /**
+     * A találatot jelző függvény.
+     * Létrehoz egy kis robbanás objektumok, amit elhelyez a robbanások listájában.
+     * Az outOfBounds értékét igazra állítja.
+     */
     public void hitEntity() {
-        int explosionPosX = xCoordinate+size_x/2;
+        int explosionPosX = (int) xCoordinate+size_x/2;
         int explosionPosY;
         if(speed > 0)
-            explosionPosY = yCoordinate+size_y;
+            explosionPosY = (int) yCoordinate+size_y;
         else
-            explosionPosY = yCoordinate;
+            explosionPosY = (int) yCoordinate;
         explosionList.add(new SmallExplosion(new Dimension(explosionPosX, explosionPosY)));
         isOutOfBounds = true;
     }

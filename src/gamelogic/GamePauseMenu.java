@@ -5,6 +5,9 @@ import gamewindow.GameMouseListener;
 
 import java.awt.*;
 
+/**
+ * A játék PAUSE állapotát vezénylő osztály.
+ */
 public class GamePauseMenu {
 
     public int WIDTH, HEIGTH;
@@ -15,13 +18,12 @@ public class GamePauseMenu {
     private Graphics2D grphcs;
     public boolean hover;
 
-    public GamePauseMenu(Dimension screen, GameKeyListener gkl) {
-        WIDTH = screen.width;
-        HEIGTH = screen.height;
-        gameKeyListener = gkl;
-        optionCounter = 0;
-    }
-
+    /**
+     * Konstrukor
+     * @param screen Az ablak maximális mérete.
+     * @param gkl A billentyűzet állapotát figyelő objektum.
+     * @param gml Az egér állapotát figyelő objektum.
+     */
     public GamePauseMenu(Dimension screen, GameKeyListener gkl, GameMouseListener gml) {
         WIDTH = screen.width;
         HEIGTH = screen.height;
@@ -31,6 +33,11 @@ public class GamePauseMenu {
         hover = false;
     }
 
+    /**
+     * Frissíti a szünet objektumok.
+     * Ellenőrzi a billentyűzetes állapotot.
+     * @return
+     */
     public int update() {
         if (gameKeyListener.down)
             optionCounter = 2;
@@ -40,10 +47,14 @@ public class GamePauseMenu {
             gameKeyListener.pause = false;
             return optionCounter;
         }
-
         return 1;
     }
 
+    /**
+     * A szünet állapot megjelenítésért felelős függvény.
+     * Az egér változásait is fiygeli.
+     * @param g A megjelenítést végző Graphics2D objektum.
+     */
     public void draw(Graphics2D g) {
         if (grphcs == null)
             grphcs = g;
@@ -86,17 +97,34 @@ public class GamePauseMenu {
 
     }
 
+    /**
+     * Egy szövegnek visszaadja azt az x értékét amivel vízszintesen középre lesz helyezve
+     * @param text A középre helyezendő szöveg.
+     * @return Azon x értéke, amivel a szöveg a kijelzőn középen jelenik meg.
+     */
     public int getCenteredText(String text) {
         int length = (int) grphcs.getFontMetrics().getStringBounds(text, grphcs).getWidth();
         return (WIDTH - length) / 2;
     }
 
+    /**
+     * Egy szövegnek a méretét adja vissza.
+     * @param string
+     * @return A szöveg mérete.
+     */
     public Dimension getStringDim(String string) {
         int width = (int) grphcs.getFontMetrics().getStringBounds(string, grphcs).getWidth();
         int heigth = (int) grphcs.getFontMetrics().getStringBounds(string, grphcs).getHeight();
         return new Dimension(width, heigth);
     }
 
+    /**
+     * Egy x, y, és méret értékű téglalapon belűl figyeli, hogy az egér tartózkodik-e.
+     * @param x a bal pont x értéke
+     * @param y a bal felső y értéke
+     * @param dim a jobb alsó pont koordinátája.
+     * @return True - Ha az egér az adott koordinátákon belül található, egyébként False.
+     */
     public boolean mouseHover(int x, int y, Dimension dim) {
         int xPosMouse = gameMouseListener.xPos;
         int yPosMouse = gameMouseListener.yPos;
