@@ -66,13 +66,13 @@ public class GamePauseMenu {
         g.setColor(Color.WHITE);
 
 
-        String resume = "RESUME";
+        String resume = "FOLYATATÁS";
         int xResume = getCenteredText(resume);
         int yResume = HEIGTH / 3;
         Dimension dimRes = getStringDim(resume);
         g.drawString(resume, xResume, HEIGTH / 3);
 
-        String quit = "QUIT";
+        String quit = "KILÉPÉS";
         int xQuit = getCenteredText(quit);
         int yQuit = HEIGTH * 2 / 3;
         Dimension quitDim = getStringDim(quit);

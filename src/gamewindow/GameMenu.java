@@ -95,7 +95,7 @@ public class GameMenu extends JPanel {
         constraints.gridy = row++;
         add(playerLabel, constraints);
 
-        JButton playButton = new JButton("Play");
+        JButton playButton = new JButton("Játék");
         playButton.addActionListener(new PlayActionListener());
         constraints.weightx = 1.0;
         constraints.gridx = 1;

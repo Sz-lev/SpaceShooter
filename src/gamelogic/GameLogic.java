@@ -33,6 +33,7 @@ public class GameLogic {
     private int time;
     private int fpsCounter;
     private int points;
+    private int highscore;
     private int level;
     private double nextMeteorInterval;
     private double lastMeteorTime;
@@ -48,6 +49,7 @@ public class GameLogic {
 
     public GameLogic(GamePanel gamepanel) {
         gp = gamepanel;
+        highscore = gp.gameWindow.player.highscore;
         gameInit();
     }
 
@@ -98,6 +100,8 @@ public class GameLogic {
             updateLasers();
             updateMeteors();
             updateExplosions();
+            if(points > highscore)
+                highscore = points;
             if(gamePauseMenu != null) {
                 gamePauseMenu = null;
                 gameState = 0;
@@ -400,9 +404,10 @@ public class GameLogic {
     private void drawPoints(Graphics2D g) {
         g.setFont(spaceFont);
         g.setColor(Color.WHITE);
-        g.drawString("HIGHSCORE: "+0, 900, 30);
-        g.drawString("SCORE: "+points, 900, 52);
-        g.drawString("TIME: "+time+" s", 900, 74);
+        int x = 850;
+        g.drawString("HIGHSCORE: "+highscore, x, 30);
+        g.drawString("SCORE: "+points, x, 52);
+        g.drawString("TIME: "+time+" s", x, 74);
         g.drawString("Level: "+level, 15, 32);
     }
 }

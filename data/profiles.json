@@ -1,10 +1,22 @@
-[{
-    "maxLevel": 0,
-    "timePlayed": 0,
-    "meteorsDestroyed": 0,
-    "highscore": 0,
-    "gamesPlayed": 0,
-    "name": "hello world",
-    "enemyShipsDestroyed": 0,
-    "powerupsCollected": 0
-}]
+[
+    {
+        "maxLevel": 7,
+        "timePlayed": 75.91666666666667,
+        "meteorsDestroyed": 10,
+        "highscore": 1054,
+        "gamesPlayed": 4,
+        "name": "hello world",
+        "enemyShipsDestroyed": 17,
+        "powerupsCollected": 6
+    },
+    {
+        "maxLevel": 7,
+        "timePlayed": 42,
+        "meteorsDestroyed": 7,
+        "highscore": 1097,
+        "gamesPlayed": 1,
+        "name": "asd",
+        "enemyShipsDestroyed": 19,
+        "powerupsCollected": 6
+    }
+]
