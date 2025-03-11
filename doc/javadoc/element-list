@@ -1,0 +1,8 @@
+game_elements.background
+game_elements.entities
+game_elements.entities.spaceships
+game_elements.explosions
+gamelogic
+gamewindow
+main
+playerdata
