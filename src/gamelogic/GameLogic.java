@@ -95,6 +95,7 @@ public class GameLogic {
             }
             backGround.update();
             checkCollision();
+            updatePowerUps();
             player.update();
             updateEnemies();
             updateLasers();
@@ -162,7 +163,6 @@ public class GameLogic {
             player.draw(g);
             drawEnemies(g);
             drawExplosions(g);
-            updatePowerUps();
             drawPoints(g);
             drawPowerUps(g);
         if(gamePauseMenu != null)
